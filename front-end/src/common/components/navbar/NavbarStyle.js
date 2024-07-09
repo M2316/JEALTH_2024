@@ -4,16 +4,17 @@ export const navbarStyle = css`
     justify-content: space-between;
     align-items: center;
     background-color: #191a1f;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100vw;
     height: 45px;
+    z-index: 100;
 
     .navLeftStyle,
     .navCenterStyle,
     .navRightStyle {
         width: 100%;
-        background-color: red;
+        background-color: #191a1f;
     }
 `;
 export const navLeftStyle = css`
@@ -22,7 +23,7 @@ export const navLeftStyle = css`
     display: flex;
     align-items: center;
     img{
-        padding: 0px 5px;
+        padding-left: 20px;
     }
 `;
 export const navCenterStyle = css`

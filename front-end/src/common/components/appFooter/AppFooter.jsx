@@ -1,51 +1,40 @@
 import { css } from "@emotion/react";
 import React from "react";
 import plusIcon from "@img/plus-icon.png";
+import { RiMenuAddFill } from "react-icons/ri";
+import { MdOutlineConstruction } from "react-icons/md";
+import { navbarStyle, navCenterStyle, navLeftStyle, navRightStyle ,footerBtnBoxStyle} from "../appFooter/AppFooterStyle";
+
+
 
 const AppFooter = () => {
     return (
         <div css={navbarStyle}>
             <div css={navLeftStyle}>
-                <span>test</span>
-            </div>
-            <div css={navCenterStyle}>
-                <div>
-                    <img src={plusIcon} width="65px" />
+                <div css={footerBtnBoxStyle}>
+                    <RiMenuAddFill></RiMenuAddFill>
+                    <span>루틴목록</span>
+                </div>
+                <div css={footerBtnBoxStyle}>
+                    <MdOutlineConstruction></MdOutlineConstruction>
+                    <span>개발중...</span>
                 </div>
             </div>
-            <div css={navRightStyle}>ddsss</div>
+            <div css={navCenterStyle}>
+                <img src={plusIcon} width="50px" />
+            </div>
+            <div css={navRightStyle}>
+                <div css={footerBtnBoxStyle}>
+                    <MdOutlineConstruction></MdOutlineConstruction>
+                    <span>개발중...</span>
+                </div>
+                <div css={footerBtnBoxStyle}>
+                    <MdOutlineConstruction></MdOutlineConstruction>
+                    <span>개발중...</span>
+                </div>
+            </div>
         </div>
     );
 };
-const navbarStyle = css`
-    position: absolute;
-    bottom: 0;
-    height: 60px;
-    width: 100vw;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #282828;
-    border-radius: 20px 20px 0 0;
-`;
-const navLeftStyle = css``;
-const navCenterStyle = css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 80px;
-    height: 80px;
-    margin-bottom: 25px;
-    &>div{
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #282828;
-        border-radius: 100px;
-        
-    }
-`;
-const navRightStyle = css``;
+
 export default AppFooter;

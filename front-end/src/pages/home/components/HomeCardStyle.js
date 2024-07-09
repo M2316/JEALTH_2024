@@ -4,7 +4,7 @@ export const cardStyle = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #191a1f;
+    background-color: #191A1F;
     border-radius: 15px;
     margin-bottom: 10px;
 `;
@@ -61,7 +61,7 @@ export const chartCardStyle = css`
     }
     & div:last-of-type{
         height: 100%;
-        background-color: #25262A;
+        background-color: #191A1F;
         border-radius: 10px;
         display: flex;
         justify-content: center;

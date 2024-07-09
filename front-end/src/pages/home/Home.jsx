@@ -18,6 +18,7 @@ const Home = () => {
         navigate("/app/health");
     };
 
+
     return (
         <div css={homePageBodyStyle}>
             <Navbar />
@@ -30,7 +31,7 @@ const Home = () => {
                     label: "2024년 운동 통계",
                     content: [],
                 }}
-                onClick={healthCardClickHandler}
+                // onClick={healthCardClickHandler}
             />
             <Card
                 addStyle={`width:90%; height:80px;`}
@@ -50,7 +51,7 @@ const Home = () => {
                     label: "달리기 기록하기",
                     icon: runningIcon,
                 }}
-                onClick={healthCardClickHandler}
+                // onClick={healthCardClickHandler}
             />
             <Card
                 addStyle={`width:90%; height:80px;`}
@@ -60,7 +61,7 @@ const Home = () => {
                     label: "클라이밍(볼더링) 기록하기",
                     icon: boulderingIcon,
                 }}
-                onClick={healthCardClickHandler}
+                // onClick={healthCardClickHandler}
             />
             <Card
                 addStyle={`width:90%; height:80px;`}
@@ -70,7 +71,7 @@ const Home = () => {
                     label: "크로스핏 기록하기",
                     icon: crossfitIcon,
                 }}
-                onClick={healthCardClickHandler}
+                // onClick={healthCardClickHandler}
             />
             <Card
                 addStyle={`width:90%; height:80px;`}
@@ -80,7 +81,7 @@ const Home = () => {
                     label: "순위 보기",
                     icon: rankingIcon,
                 }}
-                onClick={healthCardClickHandler}
+                // onClick={healthCardClickHandler}
             />
             <Card
                 addStyle={`width:90%; height:80px;`}
@@ -90,7 +91,7 @@ const Home = () => {
                     label: "로비 대화방",
                     icon: chatIcon,
                 }}
-                onClick={healthCardClickHandler}
+                // onClick={healthCardClickHandler}
             />
         </div>
     );
