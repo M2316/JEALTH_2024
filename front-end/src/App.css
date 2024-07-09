@@ -1,0 +1,10 @@
+body{
+  color: white;
+}
+
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden; /* 스크롤 제거 */
+  -webkit-overflow-scrolling: touch; /* iOS 스크롤 문제 해결 */
+}

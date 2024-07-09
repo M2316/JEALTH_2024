@@ -1,0 +1,14 @@
+
+# 모든 파일과 폴더 무시
+/*
+!.gitignore
+
+# 예외: front-end 폴더는 무시하지 않음
+!/front-end
+!/front-end/*
+!/front-end/.gitignore
+
+# 예외: back-end 폴더는 무시하지 않음
+!/back-end
+!/back-end/*/
+!/back-end/*/.gitignore

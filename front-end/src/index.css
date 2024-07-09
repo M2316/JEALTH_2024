@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+
+body{
+  font-family: 'Roboto', sans-serif;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;    
+  background: #3D3D3F;
+  /*핀치줌 막기*/
+  touch-action: pan-x pan-y; 
+}
+
+#root{
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}

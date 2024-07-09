@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/proxy/*"
+  to = "http://m2316homepc.ddns.net:7070/:splat"
+  status = 200
+  force = true
