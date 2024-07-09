@@ -97,7 +97,7 @@ const Login = () => {
                     <Input
                         inputIcon="user"
                         valueType="email"
-                        placeholder="이거바뀌면 성공~! "
+                        placeholder="아이디"
                         inputChangeHandler={(e) => {
                             setUserInfo({
                                 ...userInfo,
