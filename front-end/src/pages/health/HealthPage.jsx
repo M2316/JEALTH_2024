@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import { calendarBodyStyle, calendarContentStyle, calendarSubTitleStyle, calendarTitleStyle, healthPageBodyStyle, monthStyle, recordedDayStyle, selectedDayStyle, todayStyle, yearStyle } from "./HealthPageStyle";
 import healthIcon from "@img/sports/health-white.png";
 import Navbar from "../../common/components/navbar/Navbar";
-import Card from "./components/HealthCard";
+import HealthCard from "./components/HealthCard";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
 
@@ -21,7 +21,7 @@ const HealthPage = () => {
         <div css={healthPageBodyStyle}>
             <Navbar logo={healthIcon}></Navbar>
 
-            <Card addStyle={`width:90%;height:350px;`}>
+            <HealthCard addStyle={`width:90%;height:350px;`}>
                 <div css={calendarBodyStyle}>
                     <div css={calendarTitleStyle}>
                         <div css={yearStyle}>
@@ -58,17 +58,13 @@ const HealthPage = () => {
                     </ul>
                     
                 </div>
-            </Card>
+            </HealthCard>
+            <HealthCard addStyle={`width:90%;min-height:200px;`}>
+                
 
-            <Card
-                addStyle={`width:90%; height:200px;`}
-                type="chartCard"
-                item={{
-                    title: "Workout Statistics for 2024",
-                    label: "2024년 운동 통계",
-                    content: [],
-                }}
-            />
+            </HealthCard>
+
+
 
             <AppFooter />
         </div>
