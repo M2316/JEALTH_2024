@@ -8,6 +8,7 @@ export const cardStyle = css`
     border-radius: 15px;
     margin-bottom: 10px;
     max-width: 360px;
+    box-shadow: 4px 4px 4px #191a1f;
 `;
 
 export const titleCardStyle = css`

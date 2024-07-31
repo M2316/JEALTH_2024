@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import ScrollPicker from "../../common/components/scrollPicker/ScrollPicker";
 import AppFooter from "../../common/components/appFooter/AppFooter";
 import { css } from "@emotion/react";
-import { calendarBodyStyle, calendarContentStyle, calendarSubTitleStyle, calendarTitleStyle, healthPageBodyStyle, monthStyle, recordedDayStyle, selectedDayStyle, todayStyle, yearStyle } from "./HealthPageStyle";
+import { calendarBodyStyle, calendarContentStyle, calendarSubTitleStyle, calendarTitleStyle, checkBoxStyle, healthCardContentStyle, healthCardIconStyle, healthCardTitleBoxStyle, healthCardTitleStyle, healthPageBodyStyle, modalContentStyle, monthStyle, numberPickerStyle, recordedDayStyle, selectedDayStyle, subTitleStyle, titleStyle, todayStyle, workoutSetInfoStyle, yearStyle } from "./HealthPageStyle";
 import healthIcon from "@img/sports/health-white.png";
+import circleCheckIcon from "@img/circle-check-icon.png"
 import Navbar from "../../common/components/navbar/Navbar";
 import HealthCard from "./components/HealthCard";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
+import { Box, Button, Modal } from "@mui/material";
 
 
 const HealthPage = () => {
@@ -16,6 +18,15 @@ const HealthPage = () => {
     const numberPickerHandler = () => {
         setNumberPickerOpen(true);
     };
+
+    const workoutSetModifyHandler = ()=>{
+        setNumberPickerOpen(true);
+    }
+
+    const pickerOkHandler = ()=>{
+        setNumberPickerOpen(false);
+        
+    }
 
     return (
         <div css={healthPageBodyStyle}>
@@ -59,11 +70,63 @@ const HealthPage = () => {
                     
                 </div>
             </HealthCard>
-            <HealthCard addStyle={`width:90%;min-height:200px;`}>
-                
-
+            <HealthCard addStyle={`width:90%;display:flex;flex-direction:column;justify-content:start;`}>
+                <div css={healthCardTitleStyle}>
+                    <div css={healthCardIconStyle}>
+                        <img src={healthIcon}/>
+                    </div>
+                    <div css={healthCardTitleBoxStyle}>
+                        <h3 css={titleStyle}>bbbbb</h3>
+                        <div css={subTitleStyle}>
+                            <span>#어깨</span>
+                            <button>Done</button>
+                        </div>
+                    </div>
+                </div>
+                <ul css={healthCardContentStyle}>
+                    <li>
+                        <div css={workoutSetInfoStyle} onClick={numberPickerHandler}>
+                            <div>1.</div>
+                            <div>100Kg</div>
+                            <div>10회</div>
+                        </div>
+                        <div css={checkBoxStyle}><img src={circleCheckIcon}/></div>
+                    </li>
+                    <li>
+                        <div css={workoutSetInfoStyle} onClick={numberPickerHandler}>
+                            <div>1.</div>
+                            <div>100Kg</div>
+                            <div>10회</div>
+                        </div>
+                        <div css={checkBoxStyle}><img src={circleCheckIcon}/></div>
+                    </li>
+                    <li>
+                        <div css={workoutSetInfoStyle} onClick={numberPickerHandler}>
+                            <div>99.</div>
+                            <div>100Kg</div>
+                            <div>3330회</div>
+                        </div>
+                        <div css={checkBoxStyle}><img src={circleCheckIcon}/></div>
+                    </li>
+                    <li>
+                        <div css={workoutSetInfoStyle} onClick={numberPickerHandler}>
+                            <div>1.</div>
+                            <div>100Kg</div>
+                            <div>10회</div>
+                        </div>
+                        <div css={checkBoxStyle}><img src={circleCheckIcon}/></div>
+                    </li>
+                </ul>
             </HealthCard>
-
+            
+            
+            <Modal open={numberPickerOpen} onClose={()=>setNumberPickerOpen(false)} css={numberPickerStyle}>
+                <Box sx={modalContentStyle}>
+                    <ScrollPicker type="weight" label="중량"/>
+                    <ScrollPicker type="count" label="횟수"/>
+                    <button onClick={pickerOkHandler}>OK</button>
+                </Box>
+            </Modal>
 
 
             <AppFooter />

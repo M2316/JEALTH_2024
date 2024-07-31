@@ -1,19 +1,13 @@
 import { Modal } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import { css } from "@emotion/react";
+import React, { useEffect, useState } from "react";
 import Picker from "react-mobile-picker";
-import {
-    modalBaseBackgroundStyle,
-    modalBodyStyle,
-    modalFooterStyle,
-    pickerBoxStyle,
-    pickerColumnBoxStyle,
-    pickerLabelStyle,
-} from "./ScrollPickerStyle";
-import Button from "../button/Button";
+import { pickerContainerStyle, pickerLabelStyle, scrollPickerStyle } from "./ScrollPickerStyle";
 
 const selections = {
     numbers: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-    unit: ["g", "Kg", "lb", "Once"],
+    weight: ["Kg","g","lb", "Once"],
+    count:["회"],
     time_h: () => {
         const list = [];
         for (let i = 0; i < 24; i++) list.push(i + 1);
@@ -26,149 +20,70 @@ const selections = {
     },
 };
 
-// 0. modal body 외부를 클릭하면 modal close 수행
-// 1. 무한스크롤이 될 수 있도록 로직 수정하기
-// 2. 넘겨져온 type별로 picker가 modal에 set될 수 있도록 수정하기
-const ScrollPicker = ({ isOpen, onClose, targetState,setTargetState, pickerTypes}) => {
-    const [pickerValue, setPickerValue] = useState("");
+const ScrollPicker = ({ type, label }) => {
+    const [pickerValue, setPickerValue] = useState({
+        firstNum: "0",
+        secondNum: "0",
+        thirdNum: "0",
+        unit: type,
+    });
 
-    const [pickerScrollStyle, setPickerScrollStyle] = useState("");
 
-    const pageCloseHandler = (e) => {
-        if (e.target !== e.currentTarget) return;
-        onClose();
-    };
-
-    const pickerScrollHandler = (e) => {
+    // picker 값이 변경되면 진동 이벤트 발생
+    useEffect(()=>{
         if (
-          e.currentTarget.getAttribute("style") !== pickerScrollStyle
-        ) {
-            setPickerScrollStyle(e.currentTarget.getAttribute("style"));
-        }
-    };
+              window.matchMedia("(display-mode: standalone)").matches ||
+              window.navigator.standalone === true
+          ) {
+              window.navigator.vibrate([60]);
+          }
+    },[pickerValue]);
 
-    useEffect(() => {
-        if (
-          "" !== pickerScrollStyle &&
-            window.matchMedia("(display-mode: standalone)").matches ||
-            window.navigator.standalone === true
-        ) {
-            window.navigator.vibrate([60]);
-        }
-    }, [pickerScrollStyle]);
-
-    if (isOpen) {
-        return (
-            <div
-                name="modalBackground"
-                css={modalBaseBackgroundStyle}
-                onClick={pageCloseHandler}
-            >
-                <div css={modalBodyStyle}>
-                    <div css={pickerBoxStyle} name="pickerbody">
-                        <span css={pickerLabelStyle}>무게</span>
-                        <Picker
-                            value={pickerValue}
-                            onChange={(value) => {
-                                setPickerValue({
-                                    ...pickerValue,
-                                    ...value,
-                                });
-                            }}
-                            wheelMode="natural"
-                            height={100}
-                        >
-                            <Picker.Column
-                                onWheel={pickerScrollHandler}
-                                onTouchMove={pickerScrollHandler}
-                                className="test"
-                                name="numbers1"
-                                css={pickerColumnBoxStyle}
-                            >
-                                {selections["numbers"].map((option) => (
-                                    <Picker.Item key={option} value={option}>
-                                        {option}
-                                    </Picker.Item>
-                                ))}
-                            </Picker.Column>
-                            <Picker.Column
-                                onWheel={pickerScrollHandler}
-                                onTouchMove={pickerScrollHandler}
-                                name="numbers2"
-                                css={pickerColumnBoxStyle}
-                            >
-                                {selections["numbers"].map((option) => (
-                                    <Picker.Item key={option} value={option}>
-                                        {option}
-                                    </Picker.Item>
-                                ))}
-                            </Picker.Column>
-                            <Picker.Column
-                                onWheel={pickerScrollHandler}
-                                onTouchMove={pickerScrollHandler}
-                                name="numbers3"
-                                css={pickerColumnBoxStyle}
-                            >
-                                {selections["numbers"].map((option) => (
-                                    <Picker.Item key={option} value={option}>
-                                        {option}
-                                    </Picker.Item>
-                                ))}
-                            </Picker.Column>
-                        </Picker>
-                    </div>
-                    <div css={pickerBoxStyle}>
-                        <span css={pickerLabelStyle}>횟수</span>
-                        <Picker
-                            value={pickerValue}
-                            onChange={(value) => {
-                                setPickerValue({
-                                    ...pickerValue,
-                                    ...value,
-                                });
-                            }}
-                            wheelMode="natural"
-                            height={100}
-                        >
-                            <Picker.Column
-                                onWheel={pickerScrollHandler}
-                                onTouchMove={pickerScrollHandler}
-                                className="test"
-                                name="numbers1"
-                                css={pickerColumnBoxStyle}
-                            >
-                                {selections["numbers"].map((option) => (
-                                    <Picker.Item key={option} value={option}>
-                                        {option}
-                                    </Picker.Item>
-                                ))}
-                            </Picker.Column>
-                            <Picker.Column
-                                onWheel={pickerScrollHandler}
-                                onTouchMove={pickerScrollHandler}
-                                name="numbers2"
-                                css={pickerColumnBoxStyle}
-                            >
-                                {selections["numbers"].map((option) => (
-                                    <Picker.Item key={option} value={option}>
-                                        {option}
-                                    </Picker.Item>
-                                ))}
-                            </Picker.Column>
-                        </Picker>
-                    </div>
-                    <div css={modalFooterStyle}>
-                        <Button
-                            btnTheme="middle-size"
-                            addStyle={{ width: "100px" }}
-                        >
-                            OK
-                        </Button>
-                    </div>
-                </div>
+    return (
+        <div css={pickerContainerStyle}>
+            <div css={pickerLabelStyle}>
+                <span>{label}</span>
             </div>
-        );
-    }
+            <Picker
+                value={pickerValue}
+                onChange={(value)=>{setPickerValue(value)}}
+                css={scrollPickerStyle}
+                height={100}
+                itemHeight={45}
+                wheelMode="natural"
+            >
+                {Object.keys(pickerValue).map((name) => {
+                    if (name === "unit") {
+                        return (
+                            <Picker.Column key={name} name={name}>
+                                {selections[type].map((option) => (
+                                    <Picker.Item
+                                        key={name + option}
+                                        value={option}
+                                    >
+                                        {option}
+                                    </Picker.Item>
+                                ))}
+                            </Picker.Column>
+                        );
+                    } else {
+                        return (
+                            <Picker.Column key={name} name={name}>
+                                {selections["numbers"].map((option) => (
+                                    <Picker.Item
+                                        key={name + option}
+                                        value={option}
+                                    >
+                                        {option}
+                                    </Picker.Item>
+                                ))}
+                            </Picker.Column>
+                        );
+                    }
+                })}
+            </Picker>
+        </div>
+    );
 };
 
 export default ScrollPicker;

@@ -1,61 +1,35 @@
 import { css } from "@emotion/react";
 
-export const modalBaseBackgroundStyle = css`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #000000d1;
+export const pickerContainerStyle = css`
+    width: calc(100% - 30px);
+    margin-bottom: 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-`;
-
-export const modalBodyStyle = css`
-    width: 300px;
-    height: 300px;
-    box-sizing: border-box;
-    background: black;
-    border: 5px solid gray;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-`;
-
-export const pickerBoxStyle = css`
-    display: flex;
-    align-items: center;
-    width: 100%;
-    font-size: 2em;
-    font-weight: 600;
-
-    & > div:last-of-type {
-        mask-image: linear-gradient(
-            to top,
-            transparent,
-            transparent 5%,
-            white 50%,
-            white 50%,
-            transparent 95%,
-            transparent
-        ) !important;
-    }
+    background-color: #191A1F;
+    border-radius: 15px;
+    box-shadow: 3px 3px 3px #323232;
 `;
 
 export const pickerLabelStyle = css`
-    width: 50%;
+
+    background-color: #262834;
+    width: 80px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    `;
+    font-size: 2em;
+    font-weight: 900;
+    border-radius: 15px;
+    margin-left: 10px;
+    
 
-export const pickerColumnBoxStyle = css`
-    padding: 0px 10px;
-    width: 50%;
 `;
 
-export const modalFooterStyle = css`
-
+export const scrollPickerStyle = css`
+    font-size: 30px;
+    font-weight: 700;
+    width: 150px;
+    margin-right: 15px;
 `;

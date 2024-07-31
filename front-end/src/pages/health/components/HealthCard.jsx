@@ -8,6 +8,9 @@ const Card = ({ children, type, item, addStyle, onClick}) => {
     const icon = item?.icon;
     const content = item?.content;
     switch (type) {
+        case "":
+            
+            return <div css={addStyle}>{children}</div>;
         
         default:
             if (addStyle) {

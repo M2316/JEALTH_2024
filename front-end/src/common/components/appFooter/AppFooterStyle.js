@@ -2,47 +2,64 @@ import { css } from "@emotion/react";
 
 const globalDividingLineStyle = import.meta.env.GLOBAL_DIVIDING_LINE_COLOR;
 
-export const navbarStyle = css`
+export const footerBtnCss = css`
     position: fixed;
-    bottom: 0;
-    height: 60px;
-    width: 100vw;
+    bottom: 5px;
+    left: 2px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: #282828;
-    border-top: 3px solid #646464;
-`;
-export const navLeftStyle = css`
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-`;
-export const navCenterStyle = css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px;
-    height: 60px;
-`;
-export const navRightStyle = css`
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    height: 50px;
+    z-index: 10;
 `;
 
-export const footerBtnBoxStyle = css`
+export const footerContainerCss = css`
+    position: fixed;
+    bottom: 5px;
+    left: 25px;
+    height: 50px;
+    min-width: 300px;
+    width: calc(100% - 25px);
+    max-width: 370px;
+    border: 3px solid #C6DEE2;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    box-sizing: border-box;
     display: flex;
-    width: 100%;
-    justify-content: center;
     align-items: center;
-    flex-direction: column;
-    & > svg:first-of-type {
-        font-size: 2em;
-    }
-    span {
-        font-size: 12px;
-    }
+    background-color: #282828;
+    padding-left: 25px;
+`;
+
+export const contentBoxCss = css`
+display: flex;
+justify-content: space-around;
+align-items: center;
+width: 100%;
+
+
+`;
+export const iconBox = css`
+
+
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+& svg{
+    height: 25px;
+    width: 25px;
+}
+& span{
+    font-size: 10px;
+}
+`;
+
+
+
+export const RoutineListStyle = css`
+    position: absolute;
+    top:calc(50vh - 350px);
+    left:calc(50vw - 175px);
+    outline: none;
 `;
