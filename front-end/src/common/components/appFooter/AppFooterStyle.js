@@ -57,7 +57,7 @@ align-items: center;
 
 
 
-export const RoutineListStyle = css`
+export const ModalStyle = css`
     position: absolute;
     top:calc(50vh - 350px);
     left:calc(50vw - 175px);
