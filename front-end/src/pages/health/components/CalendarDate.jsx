@@ -11,12 +11,13 @@ import dayjs from "dayjs";
 import { selectedDayStyle } from "./CalendarStyle";
 import checkIcon from "@img/check-icon-3.png";
 
-const CalendarDate = ({ type, selectDate, setSelectDate, nowDate, renderCalendarValue}) => {
-
-    
-
-    
-
+const CalendarDate = ({
+    type,
+    selectDate,
+    setSelectDate,
+    nowDate,
+    renderCalendarValue,
+}) => {
     //선택 일 변경
     const selectDateChangeHandler = (e) => {
         if (
