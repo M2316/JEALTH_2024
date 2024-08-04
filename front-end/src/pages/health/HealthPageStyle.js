@@ -44,28 +44,62 @@ export const healthCardContentStyle = css`
     width: 100%;
     display: flex;
     flex-direction: column;
-
-
-    & li{
+    position: relative;
+    
+    &>li{
+        width:calc(100% - 110px);
         margin-left: 80px;
         padding-left: 10px;
-        width: calc(100% - 110px);
         display: flex;
-        justify-content: space-between;
-        align-items: center;
         border-top: 3px solid #282828;
         height: 35px;
-        
+        position: relative;
+        overflow-x: hidden;
+        align-items: center;
     }
-    & li:last-of-type{
+ 
+    &>li:last-of-type{
         border-bottom: 3px solid #282828;
         margin-bottom:15px;
     }
+    
+    &>li>div{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
 
+    
     & img{
         width: 25px;
         height: 25px;
+    } 
+    &>img{
+        position: absolute;
+        left: 15px;
+        bottom: 15px;
+        width: 50px;
+        height: 45px;
     }
+    
+`;
+
+
+export const workoutSetBoxStyle = css`
+
+    &>img:first-of-type{
+        position: absolute;
+        width: 100% !important;
+        right: 100%;
+        margin-right: 10px;
+    }
+    &>img:last-of-type{
+        position: absolute;
+        width: 100% !important;
+        left: 100%;
+    }
+    
+
 `;
 
 export const workoutSetInfoStyle = css`
@@ -88,6 +122,7 @@ export const checkBoxStyle = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-right:10px;
 `;
 
 

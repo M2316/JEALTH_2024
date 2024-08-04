@@ -136,12 +136,8 @@ const Calendar = () => {
                     {weekName.map((name)=><li key={ name}>{name}</li>)}
                 </ul>
                 <motion.div css={calendarDateContainerStyle} drag="x" animate={calendarSwipeControls} onDragEnd={calendarSwipeHandle} initial={{ x: 0, opacity: 1 }}>
-                    {/* <CalendarDate selectDate={selectDate} setSelectDate={setSelectDate} nowDate={date} renderCalendarValue={renderCalendarValue.beforeMonth}></CalendarDate> */}
                     <CalendarDate selectDate={selectDate} setSelectDate={setSelectDate} nowDate={date} renderCalendarValue={renderCalendarValue.nowMonth}></CalendarDate>
-                    {/* <CalendarDate selectDate={selectDate} setSelectDate={setSelectDate} nowDate={date} renderCalendarValue={renderCalendarValue.afterMonth}></CalendarDate> */}
-                </motion.div>
-
-                
+                </motion.div>                
             </div>
         </HealthCard>
     );

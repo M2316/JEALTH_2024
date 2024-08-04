@@ -11,6 +11,7 @@ export const calendarBodyStyle = css`
     height: 100%;
     padding: 15px 20px;
     box-sizing: border-box;
+    overflow-x:hidden;
 `;
 
 export const calendarTitleStyle = css`

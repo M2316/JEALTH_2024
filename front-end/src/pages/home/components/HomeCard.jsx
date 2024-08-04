@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import React from "react";
 import { cardStyle, chartCardStyle, titleCardStyle } from "./HomeCardStyle";
+import HomeChart from "./HomeChart";
 
 const Card = ({ children, type, item, addStyle, onClick}) => {
     
@@ -48,7 +49,7 @@ const Card = ({ children, type, item, addStyle, onClick}) => {
                         <span>{label}</span>
                     </div>
                     <div>
-                        <h1>Chart 공간</h1>
+                        <HomeChart data={item.chartData}/>
                     </div>
                 </div>
             );

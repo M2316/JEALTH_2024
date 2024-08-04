@@ -10,7 +10,116 @@ import boulderingIcon from "@img/sports/bouldering-white.png";
 import crossfitIcon from "@img/sports/crossfit-white.png";
 import rankingIcon from "@img/sports/ranking-white.png";
 import chatIcon from "@img/sports/chat-white.png";
-
+const data = [
+    {
+        id: "2023",
+        color: "hsl(284, 70%, 50%)",
+        data: [
+            {
+                x: "1월",
+                y: 1,
+            },
+            {
+                x: "2월",
+                y: 3,
+            },
+            {
+                x: "3월",
+                y: 4,
+            },
+            {
+                x: "4월",
+                y: 1,
+            },
+            {
+                x: "5월",
+                y: 4,
+            },
+            {
+                x: "6월",
+                y: 6,
+            },
+            {
+                x: "7월",
+                y: 10,
+            },
+            {
+                x: "8월",
+                y: 12,
+            },
+            {
+                x: "9월",
+                y: 13,
+            },
+            {
+                x: "10월",
+                y: 15,
+            },
+            {
+                x: "11월",
+                y: 17,
+            },
+            {
+                x: "12월",
+                y: 21,
+            },
+        ],
+    },
+    {
+        id: "2024",
+        color: "hsl(284, 70%, 50%)",
+        data: [
+            {
+                x: "1월",
+                y: 11,
+            },
+            {
+                x: "2월",
+                y: 13,
+            },
+            {
+                x: "3월",
+                y: 14,
+            },
+            {
+                x: "4월",
+                y: 11,
+            },
+            {
+                x: "5월",
+                y: 14,
+            },
+            {
+                x: "6월",
+                y: 12,
+            },
+            {
+                x: "7월",
+                y: 13,
+            },
+            {
+                x: "8월",
+                y: 16,
+            },
+            {
+                x: "9월",
+                y: 18,
+            },
+            {
+                x: "10월",
+                y: 20,
+            },
+            {
+                x: "11월",
+                y: 13,
+            },
+            {
+                x: "12월",
+                y: 16,
+            },
+        ],
+    },
+];
 const Home = () => {
     const navigate = useNavigate();
 
@@ -18,18 +127,18 @@ const Home = () => {
         navigate("/app/health");
     };
 
-
     return (
         <div css={homePageBodyStyle}>
             <Navbar />
 
             <Card
-                addStyle={`width:90%; height:200px;`}
+                addStyle={`width:90%; height:300px; div:last-of-type{height:80%;}`}
                 type="chartCard"
                 item={{
                     title: "Workout Statistics for 2024",
                     label: "2024년 운동 통계",
                     content: [],
+                    chartData:data
                 }}
                 // onClick={healthCardClickHandler}
             />
