@@ -13,7 +13,7 @@ export const RoutineModifyTitleStyle = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 15px;
+    padding: 15px 0px 5px 0px;
 
     & input {
         font-size: 12px;
@@ -38,66 +38,60 @@ export const RoutineSearchTagStyle = css`
 `;
 
 export const RoutineModifyContentStyle = css`
-    margin-top: 10px;
-    height: calc(100% - 140px);
-    overflow: scroll;
-`;
 
-export const RoutineTitleBoxStyle = css`
-    display: flex;
-    justify-content: space-between;
-`;
+    height: calc(100% - 70px - 72px);
+    overflow-y: scroll;
+    padding: 0px 10px;
 
-export const RoutineImgBoxStyle = css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 70px;
-    height: 70px;
-    background-color: #a1a1a1;
-    border-radius: 15px;
-    & > svg {
-        width: 40px;
-        height: 40px;
+    &>div:first-of-type>div:first-of-type{
+        margin-top: 10px;
     }
+        
 `;
 
-export const RoutineInputBoxStyle = css`
-    width: calc(100% - 70px);
-    padding-left: 10px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
+export const routineCardContainerStyle = css`
+
+
 `;
 
+export const routineCardTopTapStyle = css`
 
-export const RoutineContentTagBoxStyle = css`
     width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: start;
-    margin-top: 5px;
-    &>ul{
-        margin: 2px 0px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 15px;
+    margin: 20px 0px 10px 0px;
+    box-sizing: border-box;
+    &>div{
+        display: flex;
+        align-items: center;
+        span:first-of-type{
+            font-size: 16px;
+        }
+        span:last-of-type{
+            margin-left: 5px;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+        }
     }
-`;
-
-export const RoutineTagStyle = css`
-    padding: 0px;
-    margin: 0px;
-    list-style: none;
-    display: flex;
-    justify-content: space-evenly;
-    & li {
-        padding: 2px 5px;
-        margin-left: 4px;
+    &>button{
+        background-color: #5BB2C0;
+        color: white;
+        outline: none;
+        border: none;
         border-radius: 15px;
-        font-size: 12px;
-        font-weight: 700;
-        background-color: #556080;
+        width: 100px;
+        height: 30px;
+        font-weight: 800;
+        font-size: 16px;
     }
-
 `;
+
+
+
+
 
 export const RoutineModalOkButStyle = css`
 display: flex;
@@ -117,3 +111,4 @@ display: flex;
         box-shadow: 4px 4px 4px #323232;
     }
 `;
+
