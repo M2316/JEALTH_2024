@@ -61,3 +61,30 @@ export const RoutineSaveInfoStyle = css`
         margin-right: 20px;
     }
 `;
+
+
+
+export const RoutineSelectedBoxStyle = css`
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    background-color: #3c3c3cb8;
+    display: flex;
+    align-items: center;
+
+    div{
+        height: 70px;
+        width: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    div>img{
+        width: 50px;
+    }
+    
+
+`;

@@ -1,19 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import {v4 as uuidv4} from "uuid";
 const initialState = {
     targetMuscle: [
-        { name: "가슴", manageModalView: false, selectorModalView: false },
-        { name: "어깨", manageModalView: false, selectorModalView: false },
-        { name: "팔", manageModalView: false, selectorModalView: false },
-        { name: "등", manageModalView: false, selectorModalView: false },
-        { name: "복근", manageModalView: false, selectorModalView: false },
-        { name: "하체", manageModalView: false, selectorModalView: false },
+        { id:uuidv4(), name: "가슴", manageModalView: false, selectorModalView: false },
+        { id:uuidv4(),name: "어깨", manageModalView: false, selectorModalView: false },
+        { id:uuidv4(),name: "팔", manageModalView: false, selectorModalView: false },
+        { id:uuidv4(),name: "등", manageModalView: false, selectorModalView: false },
+        { id:uuidv4(),name: "복근", manageModalView: false, selectorModalView: false },
+        { id:uuidv4(),name: "하체", manageModalView: false, selectorModalView: false },
     ],
     tagLevel1: ["상체", "하체", "코어"],
     tagLevel2: ["가슴", "어깨", "팔", "등", "복근", "하체"],
     tagLevel3: ["프리웨이트", "머신웨이트", "맨몸웨이트"],
     routineList: [
         {
+            id:uuidv4(),
             name: "벤치프레스",
             imgCode: "",
             tagLevel1: "상체",
@@ -21,6 +22,7 @@ const initialState = {
             tagLevel3: "프리웨이트",
         },
         {
+            id:uuidv4(),
             name: "덤벨 벤치프레스",
             imgCode: "",
             tagLevel1: "상체",
@@ -28,6 +30,7 @@ const initialState = {
             tagLevel3: "프리웨이트",
         },
         {
+            id:uuidv4(),
             name: "체스트 프레스",
             imgCode: "",
             tagLevel1: "상체",
@@ -35,6 +38,7 @@ const initialState = {
             tagLevel3: "머신웨이트",
         },
         {
+            id:uuidv4(),
             name: "스쿼트",
             imgCode: "",
             tagLevel1: "하체",
@@ -42,6 +46,7 @@ const initialState = {
             tagLevel3: "프리웨이트",
         },
         {
+            id:uuidv4(),
             name: "레그익스텐션",
             imgCode: "",
             tagLevel1: "하체",
@@ -49,6 +54,7 @@ const initialState = {
             tagLevel3: "머신웨이트",
         },
         {
+            id:uuidv4(),
             name: "레그컬",
             imgCode: "",
             tagLevel1: "하체",
@@ -56,6 +62,7 @@ const initialState = {
             tagLevel3: "머신웨이트",
         },
         {
+            id:uuidv4(),
             name: "행잉 레그 레이즈",
             imgCode: "",
             tagLevel1: "코어",
@@ -63,6 +70,7 @@ const initialState = {
             tagLevel3: "프리웨이트",
         },
         {
+            id:uuidv4(),
             name: "케이블 크런치",
             imgCode: "",
             tagLevel1: "코어",
@@ -70,6 +78,7 @@ const initialState = {
             tagLevel3: "머신웨이트",
         },
         {
+            id:uuidv4(),
             name: "크런치",
             imgCode: "",
             tagLevel1: "코어",
@@ -83,7 +92,8 @@ export const routineManageSlice = createSlice({
     name: "routineManage",
     initialState,
     reducers: {
-        targetMuscleOpenControl: (state, action) => { //루틴 종목 리스트 열기
+        //루틴 종목 리스트 열기
+        targetMuscleOpenControl: (state, action) => { 
             switch(action.payload.type){
                 case "manage":
                     state.targetMuscle.map((item)=>{
@@ -106,8 +116,10 @@ export const routineManageSlice = createSlice({
             }
             
         },
-        RoutineListAdd : (state, action) => { //신규 루틴 종목 추가
+        //신규 루틴 종목 추가
+        RoutineListAdd : (state, action) => { 
             state.routineList.unshift({
+                id:uuidv4(),
                 name: "",
                 imgCode: "",
                 tagLevel1: "",

@@ -12,8 +12,12 @@ import {
 } from "./RoutineModifyItemStyle";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
+import touchVibrateUtil from "../../utils/touchVibrateUtil";
 
 const RoutineModifyItem = ({ data: dataProps, id }) => {
+
+    
+
     const [data, setData] = useState(dataProps); //props로 받아온 data를 state로 관리
 
     const tagLevel1 = useSelector((state) => state.routineManage.tagLevel1);
@@ -21,7 +25,7 @@ const RoutineModifyItem = ({ data: dataProps, id }) => {
     const tagLevel3 = useSelector((state) => state.routineManage.tagLevel3);
 
     useEffect(() => {
-        console.log(data);
+        
     }, [data]);
 
     const tagOnClickHandler = (cardItem, idx, selectTagLevel) => {

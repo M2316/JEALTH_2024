@@ -10,6 +10,8 @@ import calendarDate from "../../../utils/calendarDateUtil";
 import dayjs from "dayjs";
 import { selectedDayStyle } from "./CalendarStyle";
 import checkIcon from "@img/check-icon-3.png";
+import { useSelector } from "react-redux";
+import touchVibrateUtil from "../../../utils/touchVibrateUtil";
 
 const CalendarDate = ({
     type,
@@ -18,6 +20,12 @@ const CalendarDate = ({
     nowDate,
     renderCalendarValue,
 }) => {
+    //redux to State AND dispatch
+    const recordList = useSelector(
+        (state) => state.workoutRecord.workoutInfo
+    ).map((item) => item.workoutDate);
+    console.log(recordList);
+
     //선택 일 변경
     const selectDateChangeHandler = (e) => {
         if (
@@ -34,6 +42,7 @@ const CalendarDate = ({
             date: e.target.dataset.date,
             day: e.target.dataset.day,
         });
+        touchVibrateUtil([50])
     };
 
     //다음 달 일 선택
@@ -53,6 +62,7 @@ const CalendarDate = ({
             date: afterMonthDate.format("DD"),
             day: afterMonthDate.format("ddd"),
         });
+        touchVibrateUtil([50,0,50,0,50,])
     };
 
     //전 달 일 선택
@@ -70,6 +80,7 @@ const CalendarDate = ({
             date: beforeMonthDate.format("DD"),
             day: beforeMonthDate.format("ddd"),
         });
+        touchVibrateUtil([50,0,50,0,50,])
     };
 
     return (
@@ -129,7 +140,11 @@ const CalendarDate = ({
                                                             "YYYY"
                                                         ) &&
                                                     todayStyle,
-                                                recordedDayStyle, // 저장된 데이터 있으면 표시
+                                                recordList.find(
+                                                    (findItem) =>
+                                                        findItem ===
+                                                        `${renderCalendarValue.nowYear}-${renderCalendarValue.nowMonth}-${item.date}`
+                                                ) && recordedDayStyle, // 저장된 데이터 있으면 표시
                                             ]}
                                             data-year={
                                                 renderCalendarValue.nowYear

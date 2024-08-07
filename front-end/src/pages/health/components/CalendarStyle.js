@@ -63,6 +63,8 @@ export const yearStyle = css`
         justify-content: center;
         align-items: center;
         font-size: 20px;
+        margin: 0px 4px;
+        scale: 2.1;
     }
 `;
 export const monthStyle = css`
@@ -88,7 +90,6 @@ export const selectedDayStyle = css`
 export const calendarDateContainerStyle = css`
     display: flex;
     width: 100%;
-    overflow-x: scroll;
 `;
 
 

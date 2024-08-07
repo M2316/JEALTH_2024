@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import plusIcon from "@img/plus-icon.png";
 import { RiMenuAddFill } from "react-icons/ri";
 import { MdOutlineConstruction } from "react-icons/md";
@@ -15,16 +15,7 @@ import { Box, Modal } from "@mui/material";
 import RoutineListModal from "../../../pages/health/RoutineListModal";
 import RoutineModifyModal from "../../../pages/health/RoutineModifyModal";
 import { motion } from "framer-motion";
-
-const clickVibrateHandler = (vibCycle=[60]) =>{ //진동 함수
-    if (
-        window.matchMedia("(display-mode: standalone)").matches ||
-        window.navigator.standalone === true
-    ) {
-        window.navigator.vibrate(vibCycle);
-    }
-}
-
+import touchVibrateUtil from "../../../utils/touchVibrateUtil";
 
 const AppFooter = () => {
     const [footerViewFlag, setFooterViewFlag] = useState(false);
@@ -35,6 +26,15 @@ const AppFooter = () => {
     // 루틴 수정 modal open
     const [routineModifyModalFlag, setRoutineModifyModalFlag] = useState(false);
 
+
+    useEffect(()=>{
+        if(routineListModalFlag == undefined || routineModifyModalFlag == undefined){
+            console.log("error")
+        }
+    },[])
+    if(routineListModalFlag == undefined || routineModifyModalFlag == undefined){
+        console.log("error")
+    }
     return (
         <div>
             <div css={footerBtnCss}>
@@ -42,7 +42,7 @@ const AppFooter = () => {
                     src={plusIcon}
                     width="50px"
                     onClick={() => {
-                        clickVibrateHandler([60,30,60]);
+                        touchVibrateUtil([60,30,60]);
                         setFooterViewFlag(!footerViewFlag);
                     }}
                 />
@@ -53,7 +53,7 @@ const AppFooter = () => {
                         <motion.div
                             css={iconBox}
                             onClick={() =>{
-                                clickVibrateHandler();
+                                touchVibrateUtil();
                                 setRoutineListModalFlag(true);
                             }}
                             whileTap={{
@@ -67,7 +67,7 @@ const AppFooter = () => {
                         <motion.div
                             css={iconBox}
                             onClick={() =>{
-                                clickVibrateHandler();
+                                touchVibrateUtil();
                                 setRoutineModifyModalFlag(true);
                             }}
                             whileTap={{
@@ -81,7 +81,7 @@ const AppFooter = () => {
                         <motion.div
                             css={iconBox}
                             onClick={() =>{
-                                clickVibrateHandler();
+                                touchVibrateUtil();
                             }}
                             whileTap={{
                                 scale: 1.2,
@@ -94,7 +94,7 @@ const AppFooter = () => {
                         <motion.div
                             css={iconBox}
                             onClick={() =>{
-                                clickVibrateHandler();
+                                touchVibrateUtil();
                             }}
                             whileTap={{
                                 scale: 1.2,
@@ -114,7 +114,7 @@ const AppFooter = () => {
                 onClose={() => setRoutineListModalFlag(false)}
             >
                 <Box sx={ModalStyle}>
-                    <RoutineListModal onClose={setRoutineListModalFlag} />
+                    <RoutineListModal onClose={()=>setRoutineListModalFlag(false)} />
                 </Box>
             </Modal>
 
@@ -123,7 +123,7 @@ const AppFooter = () => {
                 onClose={() => setRoutineModifyModalFlag(false)}
             >
                 <Box sx={ModalStyle}>
-                    <RoutineModifyModal onClose={setRoutineModifyModalFlag} />
+                    <RoutineModifyModal onClose={()=>setRoutineModifyModalFlag(false)} />
                 </Box>
             </Modal>
         </div>

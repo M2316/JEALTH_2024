@@ -24,6 +24,7 @@ export const calendarContentStyle = css`
             align-items: center;
             background-color: #282828;
             margin: 5px;
+            position: relative;
         }
         &>span:first-of-type {
             color: #b63232;
@@ -38,7 +39,6 @@ export const calendarContentStyle = css`
 
 
 export const recordedDayStyle = css`
-    position: relative;
     &::before {
         content: "";
         position: absolute;
@@ -55,6 +55,7 @@ export const recordedDayStyle = css`
 export const todayStyle = css`
     box-sizing: border-box;
     border: 3px solid #c6dee2;
+    
 `;
 
 export const BeforeMonthDateStyle = css`

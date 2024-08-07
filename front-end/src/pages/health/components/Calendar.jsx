@@ -1,18 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { calendarBodyStyle, calendarDateContainerStyle, calendarSubTitleStyle, calendarTitleStyle, monthStyle, yearStyle } from "./CalendarStyle";
-import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import {motion, useAnimation} from "framer-motion";
 
 import HealthCard from "./HealthCard";
 import dayjs from "dayjs";
 import calendarDate from "../../../utils/calendarDateUtil";
 import CalendarDate from "./CalendarDate";
+import { useDispatch } from "react-redux";
+import { selectedDateCahnge } from "../../../redux/reducers/calendarSlice";
+import touchVibrateUtil from "../../../utils/touchVibrateUtil";
 
 const weekName = ["Su","Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 
 
 const Calendar = () => {
+
+    //redux to State AND dispatch
+    const dispatch = useDispatch();
+
 
     //캘린더 swipe 애니메이션 컨트롤러
     const calendarSwipeControls = useAnimation();
@@ -38,22 +45,16 @@ const Calendar = () => {
             nowMonth:calendarDate(requestDate.format("YYYY-MM-DD")),
             afterMonth:calendarDate(requestDate.add(1,'month').format("YYYY-MM-DD")),            
         });
-        //렌더링 이후에 scroll 이동하기 위해 setTimeout 적용
-        // setTimeout(()=>{
-        //     if (scrollRef.current) {
-        //         // div 요소의 전체 너비 계산 후 중간 지점으로 스크롤 설정
-        //         const scrollWidth = scrollRef.current.scrollWidth;
-        //         scrollRef.current.scrollLeft = (scrollWidth / 2) - (scrollRef.current.querySelector('ul').clientWidth/2);
-        //       }
-        // },1)
+        dispatch(selectedDateCahnge(selectDate.year + "-" + selectDate.month + "-" + selectDate.date));
+
+
     }, [selectDate]);
     
     
     //년도 변경 이벤트
     const yearSelectorHandler = (e)=>{
         const type = e.target.dataset.btnType;
-
-        
+        touchVibrateUtil([50,0,100,0,50,0,100])
         
         if(type === "before"){
             const requestDate = dayjs(selectDate.year+"-"+selectDate.month+"-"+selectDate.date).subtract(1,'year');
@@ -74,16 +75,20 @@ const Calendar = () => {
                 day:requestDate.format("ddd")
             })
         }
-
-
     }
 
+
+
+    
+
+    //애니메이션 관련 코드 start ================================================================================
 
 
     //framer-motion [캘린더 swipe]
     const calendarSwipeHandle = (event, info)=>{
         if (info.offset.x > 100) {
             // 오른쪽으로 스와이프
+            touchVibrateUtil([50,0,50,0,50,])
             calendarSwipeControls.start({ x: `calc(${info.offset.x}px + 100%`, opacity: 0 },{transition:{duration:0.03}}).then(() => {
                 const requestDate = dayjs(selectDate.year+"-"+selectDate.month+"-"+selectDate.date).subtract(1,'month');
                 setSelectDate({
@@ -94,10 +99,11 @@ const Calendar = () => {
                     day:requestDate.format("ddd")
                 })
             //   setCurrentIndex((prevIndex) => (prevIndex + 1) % cards.length);
-              calendarSwipeControls.start({ x: [-200,0], opacity: 1 });
+            calendarSwipeControls.start({ x: [-200,0], opacity: 1 });
             });
-          } else if (info.offset.x < -100) {
+        } else if (info.offset.x < -100) {
             // 왼쪽으로 스와이프
+            touchVibrateUtil([50,0,50,0,50,])
             calendarSwipeControls.start({ x: `calc(${info.offset.x}px + -100%`, opacity: 0 },{transition:{duration:0.03}}).then(() => {
                 const requestDate = dayjs(selectDate.year+"-"+selectDate.month+"-"+selectDate.date).add(1,'month');
                 setSelectDate({
@@ -108,23 +114,22 @@ const Calendar = () => {
                     day:requestDate.format("ddd")
                 })
             //   setCurrentIndex((prevIndex) => (prevIndex - 1 + cards.length) % cards.length);
-              calendarSwipeControls.start({ x: [200,0], opacity: 1 });
+            calendarSwipeControls.start({ x: [200,0], opacity: 1 });
             });
-          }else{
+        }else{
             calendarSwipeControls.start({ x: 0, opacity: 1 });
-          }
+        }
     }
-
-    
+    //애니메이션 관련 코드 end ================================================================================
 
     return (
         <HealthCard addStyle={`width:90%;height:380px;`}>
             <div css={calendarBodyStyle}>
                 <div css={calendarTitleStyle}>
                     <div css={yearStyle}>
-                        <MdArrowBackIos onClick={yearSelectorHandler} data-btn-type="before"></MdArrowBackIos>
+                        <MdKeyboardArrowLeft  onClick={yearSelectorHandler} data-btn-type="before"></MdKeyboardArrowLeft >
                         <span name="date-year">{selectDate.year}</span>
-                        <MdArrowForwardIos onClick={yearSelectorHandler} data-btn-type="after"></MdArrowForwardIos>
+                        <MdKeyboardArrowRight  onClick={yearSelectorHandler} data-btn-type="after"></MdKeyboardArrowRight >
                     </div>
                     <div css={monthStyle}>
                         <h1>{selectDate.month}</h1>

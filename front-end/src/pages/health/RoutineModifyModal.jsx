@@ -42,9 +42,8 @@ const RoutineModifyModal = ({ onClose }) => {
     //루틴 종목 클릭시 해당 루틴 목록 열기
     const workoutGroupClickHandler = (e, name) => {
         touchVibrateUtil();
-        dispatch(targetMuscleOpenControl({name,type:"manage"}));
+        dispatch(targetMuscleOpenControl({ name, type: "manage" }));
     };
-
 
     //루틴 추가 버튼 클릭시 해당 루틴 목록에 추가
     const routineListAddHandler = (e, name) => {
@@ -56,96 +55,94 @@ const RoutineModifyModal = ({ onClose }) => {
     useEffect(() => {
         //루틴 목록이 열렸을때 화살표 회전 애니메이션
         routineManageList.map((item, idx) => {
-            if(item.manageModalView) {
+            if (item.manageModalView) {
                 arrowAnimation(arrowControlRef.current[idx], { rotate: 180 });
-                arrowControlRef.current[idx].parentElement.parentElement.querySelector('button').scrollIntoView({behavior:'smooth'});
-                
+                arrowControlRef.current[idx].parentElement.parentElement
+                    .querySelector("button")
+                    .scrollIntoView({ behavior: "smooth" });
             }
         });
     }, [routineManageList]);
 
     return (
-        <AnimatePresence>
-            <div css={RoutineModifyContainerStyle} ref={arrowScope}>
-                <div css={RoutineModifyTitleStyle}>
-                    <Input
-                        inputIcon="info"
-                        valueType="text"
-                        inputChangeHandler={(e) => setSearchVal(e.target.value)}
-                        inputClearHandler={() => setSearchVal("")}
-                        inputState={searchVal}
-                        placeholder="검색어를 입력해 주세요."
-                        addStyle={`width:60%; margin:0;`}
-                        name="searchVal"
-                    ></Input>
-                    <ul css={RoutineSearchTagStyle}>
-                        <li>#가슴</li>
-                        <li>#프리웨이트</li>
-                    </ul>
-                </div>
-                <motion.div
-                    css={RoutineModifyContentStyle}
-                    variants={groupVariants}
-                    initial="init"
-                    animate="open"
-                    exit="closed"
-                >
-                    {routineManageList &&
-                        routineManageList.map((targetMuscle, idxA) => (
-                            <div css={routineCardContainerStyle} key={uuidv4()}>
-                                <div css={routineCardTopTapStyle}>
-                                    <div
-                                        onClick={(e) =>
-                                            workoutGroupClickHandler(
-                                                e,
-                                                targetMuscle.name
-                                            )
-                                        }
-                                    >
-                                        <span>{targetMuscle.name}</span>
-                                        <motion.span
-                                            ref={(el) =>
-                                                (arrowControlRef.current[idxA] =
-                                                    el)
-                                            }
-                                        >
-                                            <BiDownArrow />
-                                        </motion.span>
-                                    </div>
-                                    <button
-                                        onClick={(e) =>
-                                            routineListAddHandler(
-                                                e,
-                                                targetMuscle.name
-                                            )
-                                        }
-                                    >
-                                        루틴 추가
-                                    </button>
-                                </div>
-                                <motion.div>
-                                    {targetMuscle.manageModalView &&
-                                        routineList
-                                            .filter(
-                                                (routine) =>
-                                                    targetMuscle.name ===
-                                                    routine.tagLevel2
-                                            )
-                                            .map((item) => (
-                                                <RoutineModifyItem
-                                                    data={item}
-                                                    key={uuidv4()}
-                                                ></RoutineModifyItem>
-                                            ))}
-                                </motion.div>
-                            </div>
-                        ))}
-                </motion.div>
-                <div css={RoutineModalOkButStyle}>
-                    <button onClick={() => onClose()}>OK</button>
-                </div>
+        <div css={RoutineModifyContainerStyle} ref={arrowScope}>
+            <div css={RoutineModifyTitleStyle}>
+                <Input
+                    inputIcon="info"
+                    valueType="text"
+                    inputChangeHandler={(e) => setSearchVal(e.target.value)}
+                    inputClearHandler={() => setSearchVal("")}
+                    inputState={searchVal}
+                    placeholder="검색어를 입력해 주세요."
+                    addStyle={`width:60%; margin:0;`}
+                    name="searchVal"
+                ></Input>
+                <ul css={RoutineSearchTagStyle}>
+                    <li>#가슴</li>
+                    <li>#프리웨이트</li>
+                </ul>
             </div>
-        </AnimatePresence>
+            <motion.div
+                css={RoutineModifyContentStyle}
+                variants={groupVariants}
+                initial="init"
+                animate="open"
+                exit="closed"
+            >
+                {routineManageList &&
+                    routineManageList.map((targetMuscle, idxA) => (
+                        <div css={routineCardContainerStyle} key={uuidv4()}>
+                            <div css={routineCardTopTapStyle}>
+                                <div
+                                    onClick={(e) =>
+                                        workoutGroupClickHandler(
+                                            e,
+                                            targetMuscle.name
+                                        )
+                                    }
+                                >
+                                    <span>{targetMuscle.name}</span>
+                                    <motion.span
+                                        ref={(el) =>
+                                            (arrowControlRef.current[idxA] = el)
+                                        }
+                                    >
+                                        <BiDownArrow />
+                                    </motion.span>
+                                </div>
+                                <button
+                                    onClick={(e) =>
+                                        routineListAddHandler(
+                                            e,
+                                            targetMuscle.name
+                                        )
+                                    }
+                                >
+                                    루틴 추가
+                                </button>
+                            </div>
+                            <motion.div>
+                                {targetMuscle.manageModalView &&
+                                    routineList
+                                        .filter(
+                                            (routine) =>
+                                                targetMuscle.name ===
+                                                routine.tagLevel2
+                                        )
+                                        .map((item) => (
+                                            <RoutineModifyItem
+                                                data={item}
+                                                key={uuidv4()}
+                                            ></RoutineModifyItem>
+                                        ))}
+                            </motion.div>
+                        </div>
+                    ))}
+            </motion.div>
+            <div css={RoutineModalOkButStyle}>
+                <button onClick={() => onClose()}>OK</button>
+            </div>
+        </div>
     );
 };
 

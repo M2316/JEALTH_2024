@@ -1,32 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { BsImageFill } from "react-icons/bs";
 import HealthCard from "./components/HealthCard";
+import checkIcon from "@img/check-icon-4.png"
 import {
     RoutineImgBoxStyle,
     RoutineInfoStyle,
     RoutineNameStyle,
     RoutineSaveInfoStyle,
+    RoutineSelectedBoxStyle,
     RoutineTagStyle,
 } from "./RoutineListItemStyle";
-import { useSelector } from "react-redux";
-const RoutineListItem = ({ data: dataProps, id }) => {
-    const [data, setData] = useState(dataProps); //props로 받아온 data를 state로 관리
+import touchVibrateUtil from "../../utils/touchVibrateUtil";
+const RoutineListItem = ({ data, id, cardClickHandler,selectedFlag}) => {
 
-    console.log(data);
-
-    const tagLevel1 = useSelector((state) => state.routineManage.tagLevel1);
-    const tagLevel2 = useSelector((state) => state.routineManage.tagLevel2);
-    const tagLevel3 = useSelector((state) => state.routineManage.tagLevel3);
+    const cardSelectorHandler = (e)=>{
+        touchVibrateUtil();
+        cardClickHandler(data);
+    }
 
     return (
         <motion.div
-            initial={{ y: -20, opacity: 0, transition: { duration: 0.4 } }}
-            animate={{ y: 0, opacity: 1, transition: { duration: 0.4 } }}
-            exit={{ y: -20, opacity: 0, transition: { duration: 0.4 } }}
+            onClick={(e)=>{cardSelectorHandler(e)}}
         >
             <HealthCard
-                addStyle={`height:70px; width:100%;justify-content:start; align-items:center;`}
+                addStyle={`height:70px; width:100%;justify-content:start; align-items:center;position:relative;`}
             >
                 <div css={RoutineImgBoxStyle}>
                     <BsImageFill></BsImageFill>
@@ -45,7 +43,17 @@ const RoutineListItem = ({ data: dataProps, id }) => {
                         <span>최대 중량 : 110Kg</span>
                     </div>
                 </div>
+                {
+                selectedFlag && (
+                    <div css={RoutineSelectedBoxStyle}>
+                        <div>
+                            <img src={checkIcon}/>
+                        </div>
+                    </div>
+                )
+            }
             </HealthCard>
+            
         </motion.div>
     );
 };
