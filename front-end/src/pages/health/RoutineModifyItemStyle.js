@@ -64,3 +64,24 @@ export const RoutineTagStyle = css`
     }
 
 `;
+export const alertDialogStyle = css`
+    position: absolute;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100px;
+    height: 20px;
+    font-size: 14px;
+    background-color: #f1817b;
+    border-radius: 15px;
+    font-weight: 700;
+    top: 0;
+
+    span {
+        display: flex;
+        align-items: center;
+    }
+    svg {
+        font-size: 16px;
+    }
+`;

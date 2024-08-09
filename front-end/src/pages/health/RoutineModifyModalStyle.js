@@ -27,35 +27,57 @@ export const RoutineSearchTagStyle = css`
     display: flex;
     justify-content: space-evenly;
     width: 40%;
-    & li {
-        padding: 2px 5px;
-        margin-left: 4px;
-        border-radius: 15px;
-        font-size: 12px;
-        font-weight: 700;
-        background-color: #5bb2c0;
+    position: relative;
+    height: 42px;
+    
+    & div{
+        width: 100%;
+        top: calc(21px - 10px);
+        display: flex;
+        align-content: space-between;
+        flex-direction: column;
+        position: absolute;
+        z-index: 100;
+        &:first-of-type{
+            width: 48px;
+            left: 3px;
+            
+        }
+        &:last-of-type{
+            left: 53px;
+            width: 80px;
+            
+        }
+        li{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px;
+            margin-left: 4px;
+            margin-bottom: 4px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            background-color: #5bb2c0;
+            
+        }
     }
 `;
 
 export const RoutineModifyContentStyle = css`
-
     height: calc(100% - 70px - 72px);
     overflow-y: scroll;
     padding: 0px 10px;
 
-    &>div:first-of-type>div:first-of-type{
+    & > div:first-of-type > div:first-of-type {
         margin-top: 10px;
     }
-        
 `;
 
 export const routineCardContainerStyle = css`
-
-
 `;
 
 export const routineCardTopTapStyle = css`
-
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -63,21 +85,23 @@ export const routineCardTopTapStyle = css`
     padding: 0px 15px;
     margin: 20px 0px 10px 0px;
     box-sizing: border-box;
-    &>div{
+    & > div {
         display: flex;
         align-items: center;
-        span:first-of-type{
+        margin-left: auto;
+
+        span:first-of-type {
             font-size: 16px;
         }
-        span:last-of-type{
+        span:last-of-type {
             margin-left: 5px;
             font-size: 20px;
             display: flex;
             justify-content: center;
         }
     }
-    &>button{
-        background-color: #5BB2C0;
+    & > button {
+        background-color: #5bb2c0;
         color: white;
         outline: none;
         border: none;
@@ -89,12 +113,16 @@ export const routineCardTopTapStyle = css`
     }
 `;
 
-
-
-
+export const cardWrapStyle = css`
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
 
 export const RoutineModalOkButStyle = css`
-display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     height: 70px;
@@ -112,3 +140,30 @@ display: flex;
     }
 `;
 
+export const alertDialogBoxStyle = css`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+`;
+
+export const alertDialogStyle = css`
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 20px;
+    font-size: 14px;
+    background-color: #7b94f1;
+    border-radius: 15px;
+    font-weight: 700;
+    top: 0;
+    span {
+        display: flex;
+        align-items: center;
+        margin-left: 5px;
+    }
+    svg {
+        font-size: 16px;
+    }
+`;

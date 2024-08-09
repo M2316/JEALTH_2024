@@ -20,11 +20,11 @@ const Navbar = ({logo}) => {
     
     return (
         <div css={navbarStyle}>
-            <div css={navLeftStyle} onClick={()=>setMenuModalFlag(true)}>
+            <div css={navLeftStyle} onClick={()=>setUserInfoModalFlag(true)}><img src={dummyUserIcon} alt="" height="35px" /></div>
+            <div css={navCenterStyle}><img src={centerLogo} alt="" height="35px" /></div>
+            <div css={navRightStyle} onClick={()=>setMenuModalFlag(true)}>
                 <img src={navMenuIcon} alt="" height="35px" />
             </div>
-            <div css={navCenterStyle}><img src={centerLogo} alt="" height="35px" /></div>
-            <div css={navRightStyle} onClick={()=>setUserInfoModalFlag(true)}><img src={dummyUserIcon} alt="" height="35px" /></div>
             
             <Modal open={menuModalFlag} onClose={()=>setMenuModalFlag(false)}>
                 <Box>

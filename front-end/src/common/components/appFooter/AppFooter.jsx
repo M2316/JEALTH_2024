@@ -14,7 +14,7 @@ import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import { Box, Modal } from "@mui/material";
 import RoutineListModal from "../../../pages/health/RoutineListModal";
 import RoutineModifyModal from "../../../pages/health/RoutineModifyModal";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import touchVibrateUtil from "../../../utils/touchVibrateUtil";
 
 const AppFooter = () => {
@@ -26,14 +26,19 @@ const AppFooter = () => {
     // 루틴 수정 modal open
     const [routineModifyModalFlag, setRoutineModifyModalFlag] = useState(false);
 
-
-    useEffect(()=>{
-        if(routineListModalFlag == undefined || routineModifyModalFlag == undefined){
-            console.log("error")
+    useEffect(() => {
+        if (
+            routineListModalFlag == undefined ||
+            routineModifyModalFlag == undefined
+        ) {
+            console.log("error");
         }
-    },[])
-    if(routineListModalFlag == undefined || routineModifyModalFlag == undefined){
-        console.log("error")
+    }, []);
+    if (
+        routineListModalFlag == undefined ||
+        routineModifyModalFlag == undefined
+    ) {
+        console.log("error");
     }
     return (
         <div>
@@ -42,7 +47,7 @@ const AppFooter = () => {
                     src={plusIcon}
                     width="50px"
                     onClick={() => {
-                        touchVibrateUtil([60,30,60]);
+                        touchVibrateUtil([60, 30, 60]);
                         setFooterViewFlag(!footerViewFlag);
                     }}
                 />
@@ -52,21 +57,33 @@ const AppFooter = () => {
                     <div css={contentBoxCss}>
                         <motion.div
                             css={iconBox}
-                            onClick={() =>{
+                            onClick={() => {
                                 touchVibrateUtil();
-                                setRoutineListModalFlag(true);
                             }}
                             whileTap={{
                                 scale: 1.2,
                                 transition: { duration: 0.05 },
                             }}
                         >
-                            <RiMenuAddFill></RiMenuAddFill>
-                            <span>루틴 목록</span>
+                            <MdOutlineConstruction></MdOutlineConstruction>
+                            <span>개발중...</span>
                         </motion.div>
                         <motion.div
                             css={iconBox}
-                            onClick={() =>{
+                            onClick={() => {
+                                touchVibrateUtil();
+                            }}
+                            whileTap={{
+                                scale: 1.2,
+                                transition: { duration: 0.05 },
+                            }}
+                        >
+                            <MdOutlineConstruction></MdOutlineConstruction>
+                            <span>개발중...</span>
+                        </motion.div>
+                        <motion.div
+                            css={iconBox}
+                            onClick={() => {
                                 touchVibrateUtil();
                                 setRoutineModifyModalFlag(true);
                             }}
@@ -80,50 +97,53 @@ const AppFooter = () => {
                         </motion.div>
                         <motion.div
                             css={iconBox}
-                            onClick={() =>{
+                            onClick={() => {
                                 touchVibrateUtil();
+                                setRoutineListModalFlag(true);
                             }}
                             whileTap={{
                                 scale: 1.2,
                                 transition: { duration: 0.05 },
                             }}
                         >
-                            <MdOutlineConstruction></MdOutlineConstruction>
-                            <span>개발중...</span>
-                        </motion.div>
-                        <motion.div
-                            css={iconBox}
-                            onClick={() =>{
-                                touchVibrateUtil();
-                            }}
-                            whileTap={{
-                                scale: 1.2,
-                                transition: { duration: 0.05 },
-                            }}
-                            
-                        >
-                            <MdOutlineConstruction></MdOutlineConstruction>
-                            <span>개발중...</span>
+                            <RiMenuAddFill></RiMenuAddFill>
+                            <span>루틴 목록</span>
                         </motion.div>
                     </div>
                 </div>
             )}
+            <Modal
+                open={routineModifyModalFlag}
+                onClose={() => setRoutineModifyModalFlag(false)}
+            >
+                <Box sx={ModalStyle}>
+                    <motion.div
+                        initial={{ y: -30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                    >
+                        <RoutineModifyModal
+                            onClose={() => setRoutineModifyModalFlag(false)}
+                            isOpen={routineModifyModalFlag}
+                        />
+                    </motion.div>
+                </Box>
+            </Modal>
 
             <Modal
                 open={routineListModalFlag}
                 onClose={() => setRoutineListModalFlag(false)}
             >
                 <Box sx={ModalStyle}>
-                    <RoutineListModal onClose={()=>setRoutineListModalFlag(false)} />
-                </Box>
-            </Modal>
-
-            <Modal
-                open={routineModifyModalFlag}
-                onClose={() => setRoutineModifyModalFlag(false)}
-            >
-                <Box sx={ModalStyle}>
-                    <RoutineModifyModal onClose={()=>setRoutineModifyModalFlag(false)} />
+                    <motion.div
+                        initial={{ y: -30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        key="routineListModal"
+                    >
+                        <RoutineListModal
+                            onClose={() => setRoutineListModalFlag(false)}
+                            isOpen={routineListModalFlag}
+                        />
+                    </motion.div>
                 </Box>
             </Modal>
         </div>

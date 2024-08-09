@@ -36,3 +36,12 @@ export const inputGroupStyle = css`
         }
     }
 `;
+
+
+
+export const inputBoxStyle = css`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;

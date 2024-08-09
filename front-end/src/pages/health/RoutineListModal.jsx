@@ -10,14 +10,20 @@ import {
 } from "./RoutineListModalStyle";
 
 import { BiDownArrow } from "react-icons/bi";
-import { motion, useAnimate } from "framer-motion";
+import {
+    AnimatePresence,
+    motion,
+    useAnimate,
+    usePresence,
+} from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { targetMuscleOpenControl } from "../../redux/reducers/routineManageSlice";
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import RoutineListItem from "./RoutineListItem";
 import { routineListAppend } from "../../redux/reducers/workoutRecordSlice";
+import { duration } from "@mui/material";
 
-const RoutineListModal = ({ onClose }) => {
+const RoutineListModal = ({ onClose, isOpen }) => {
     // 컴포넌트 기본 state
     const [selectedRoutineList, setSelectedRoutineList] = useState([]);
 
@@ -29,7 +35,7 @@ const RoutineListModal = ({ onClose }) => {
     const targetMuscleList = useSelector(
         (state) => state.routineManage.targetMuscle
     );
-    const selectedDate = useSelector( (state)=>state.calendar.strDate);
+    const selectedDate = useSelector((state) => state.calendar.strDate);
 
     //루틴 종목 클릭시 해당 루틴 목록 열기
     const workoutGroupClickHandler = (e, name) => {
@@ -53,37 +59,26 @@ const RoutineListModal = ({ onClose }) => {
         }
     };
 
-    const okBtnHandler = (e)=>{
-        dispatch(routineListAppend({
-            workoutDate:selectedDate,
-            selectedRoutine:selectedRoutineList            
-        }));
-
+    const okBtnHandler = (e) => {
+        if(selectedRoutineList.length > 0){
+            touchVibrateUtil([100, 50, 100, 50, 200]);
+            dispatch(
+                routineListAppend({
+                    workoutDate: selectedDate,
+                    selectedRoutine: selectedRoutineList,
+                })
+            );
+        }else{
+            touchVibrateUtil([50, 50, 50]);
+        }
         onClose();
-    }
-
+    };
 
     //애니메이션 관련 코드 ================================================================================
     const [scope, animate] = useAnimate();
+    const [isPresent, safeToRemove] = usePresence();
     const arrowControlRef = useRef([]);
-
-    //페이지 실행시 실행
-    useEffect(() => {
-        const enterAnimation = () => {
-            animate(
-                scope.current,
-                { y: [-20, 0] },
-                { duration: 0.3, type: "spring" }
-            );
-        };
-        enterAnimation();
-
-        animate(
-            scope.current,
-            { y: [-20, 0] },
-            { duration: 0.3, type: "spring" }
-        );
-    }, []);
+    const cardGroupRef = useRef([]);
 
     //루틴 목록이 열렸을때 화살표 회전 애니메이션
     useEffect(() => {
@@ -95,7 +90,16 @@ const RoutineListModal = ({ onClose }) => {
                 ].parentElement.parentElement.scrollIntoView({
                     behavior: "smooth",
                 });
-            }else{
+                animate(
+                    cardGroupRef.current[idx],
+                    { y: [-20, 0], opacity: [0, 1] },
+                    { transition: { duration: 0.3 } }
+                );
+                // const cardGroupOpenAnimation = async () => {
+                //     await 
+                // };
+                // cardGroupOpenAnimation();
+            } else{
                 animate(arrowControlRef.current[idx], { rotate: 0 });
             }
         });
@@ -108,10 +112,14 @@ const RoutineListModal = ({ onClose }) => {
             <div css={RoutineListTitleStyle}>
                 <h1>종목 선택</h1>
             </div>
+
             <div css={RoutineModalContentStyle}>
                 {targetMuscleList &&
                     targetMuscleList.map((targetMuscle, idxA) => (
-                        <div key={targetMuscle.name+idxA} css={RoutineGroupStyle}>
+                        <div
+                            key={targetMuscle.name + idxA}
+                            css={RoutineGroupStyle}
+                        >
                             <div
                                 css={RoutineCardTopTapStyle}
                                 onClick={(e) =>
@@ -132,39 +140,44 @@ const RoutineListModal = ({ onClose }) => {
                                     </motion.span>
                                 </div>
                             </div>
+
                             <div
                                 css={RoutineCardContainerStyle}
                                 key="routine-card-component"
+                                ref={(el) => (cardGroupRef.current[idxA] = el)}
+                                
                             >
-                                {targetMuscle.selectorModalView &&
-                                    routineManageList
-                                        .filter(
-                                            (routine) =>
-                                                targetMuscle.name ===
-                                                routine.tagLevel2
-                                        )
-                                        .map((item,idxB) => (
-                                            <RoutineListItem
-                                                data={item}
-                                                key={item.name+idxB}
-                                                cardClickHandler={
-                                                    cardClickHandler
-                                                }
-                                                selectedFlag={
-                                                    !!selectedRoutineList.find(
-                                                        (findItem) =>
-                                                            findItem.id ===
-                                                            item.id
-                                                    )
-                                                }
-                                            ></RoutineListItem>
-                                        ))}
+                                <AnimatePresence>
+                                    {targetMuscle.selectorModalView &&
+                                        routineManageList
+                                            .filter(
+                                                (routine) =>
+                                                    targetMuscle.name ===
+                                                    routine.tagLevel2
+                                            )
+                                            .map((item, idxB) => (
+                                                <RoutineListItem
+                                                    data={item}
+                                                    key={item.name + idxB}
+                                                    cardClickHandler={
+                                                        cardClickHandler
+                                                    }
+                                                    selectedFlag={
+                                                        !!selectedRoutineList.find(
+                                                            (findItem) =>
+                                                                findItem.id ===
+                                                                item.id
+                                                        )
+                                                    }
+                                                ></RoutineListItem>
+                                            ))}
+                                </AnimatePresence>
                             </div>
                         </div>
                     ))}
             </div>
             <div css={RoutineModalOkButStyle}>
-                <button onClick={(e) => okBtnHandler(e)}>OK</button>
+                <motion.button onClick={(e) => okBtnHandler(e)} whileTap={{scale:1.2}}>OK</motion.button>
             </div>
         </div>
     );

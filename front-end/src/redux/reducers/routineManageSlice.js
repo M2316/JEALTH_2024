@@ -114,7 +114,6 @@ export const routineManageSlice = createSlice({
                     })
                     break;
             }
-            
         },
         //신규 루틴 종목 추가
         RoutineListAdd : (state, action) => { 
@@ -133,11 +132,32 @@ export const routineManageSlice = createSlice({
                     item.manageModalView = false;
                 }
             })
+        },
+        //루틴 명 변경
+        RoutineNameChange : (state,action)=>{
+            state.routineList.find(findItem=>findItem.id === action.payload.id).name = action.payload.name;
+        },
+        RoutineTagChange : (state, action)=>{
+            console.log("동작");
 
+            switch(action.payload.type){
+                case "level1":
+                    state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel1 = action.payload.tag;
+                    break;
+                case "level2":
+                    state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel2 = action.payload.tag;
+                    break;
+                case "level3":
+                    state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel3 = action.payload.tag;
+                    break;
+            }
+            console.log(state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel2)
+
+            
         }
     },
 });
 
-export const { targetMuscleOpenControl, RoutineListAdd } = routineManageSlice.actions;
+export const { targetMuscleOpenControl, RoutineListAdd, RoutineNameChange, RoutineTagChange, } = routineManageSlice.actions;
 
 export default routineManageSlice.reducer;

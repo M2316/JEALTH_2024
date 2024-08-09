@@ -41,6 +41,7 @@ export const RoutineCardTopTapStyle = css`
     &>div{
         display: flex;
         align-items: center;
+        margin-left: auto;
         span:first-of-type{
             font-size: 16px;
         }

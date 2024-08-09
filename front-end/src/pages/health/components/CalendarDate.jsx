@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
     AfterMonthDateStyle,
     BeforeMonthDateStyle,
@@ -6,12 +6,14 @@ import {
     recordedDayStyle,
     todayStyle,
 } from "./CalendarDateStyle";
-import calendarDate from "../../../utils/calendarDateUtil";
 import dayjs from "dayjs";
 import { selectedDayStyle } from "./CalendarStyle";
 import checkIcon from "@img/check-icon-3.png";
 import { useSelector } from "react-redux";
 import touchVibrateUtil from "../../../utils/touchVibrateUtil";
+import { useAnimate } from "framer-motion";
+
+
 
 const CalendarDate = ({
     type,
@@ -19,12 +21,12 @@ const CalendarDate = ({
     setSelectDate,
     nowDate,
     renderCalendarValue,
+    monthAnimateControls,
 }) => {
     //redux to State AND dispatch
     const recordList = useSelector(
         (state) => state.workoutRecord.workoutInfo
     ).map((item) => item.workoutDate);
-    console.log(recordList);
 
     //선택 일 변경
     const selectDateChangeHandler = (e) => {
@@ -42,7 +44,7 @@ const CalendarDate = ({
             date: e.target.dataset.date,
             day: e.target.dataset.day,
         });
-        touchVibrateUtil([50])
+        touchVibrateUtil([50]);
     };
 
     //다음 달 일 선택
@@ -54,7 +56,6 @@ const CalendarDate = ({
                 "-" +
                 e.target.dataset.date
         ).add(1, "month");
-
         setSelectDate({
             year: afterMonthDate.format("YYYY"),
             month: afterMonthDate.format("MM"),
@@ -62,7 +63,12 @@ const CalendarDate = ({
             date: afterMonthDate.format("DD"),
             day: afterMonthDate.format("ddd"),
         });
-        touchVibrateUtil([50,0,50,0,50,])
+        touchVibrateUtil([50, 0, 50, 0, 50]);
+        //월 TEXT애니메이션
+        monthAnimateControls.start(
+            { y: [-20, 0], opacity: [0, 1] },
+            { transition: 0.1 }
+        );
     };
 
     //전 달 일 선택
@@ -80,15 +86,30 @@ const CalendarDate = ({
             date: beforeMonthDate.format("DD"),
             day: beforeMonthDate.format("ddd"),
         });
-        touchVibrateUtil([50,0,50,0,50,])
+        touchVibrateUtil([50, 0, 50, 0, 50]);
+        //월 TEXT애니메이션
+        monthAnimateControls.start(
+            { y: [20, 0], opacity: [0, 1] },
+            { transition: 0.1 }
+        );
     };
+
+    //애니메이션 관련 코드 start ================================================================================
+    const [scope, animate] = useAnimate();
+    
+    useEffect(()=>{
+        const checkImg = document.querySelector(`[data-month="${selectDate.month}"][data-date="${selectDate.date}"] img`);
+        checkImg && animate(checkImg, { y: [-5, 0] }, { duration: 0.3, type: "spring",stiffness:400 });
+    },[selectDate])
+
+    //애니메이션 관련 코드 end ================================================================================
 
     return (
         <ul css={calendarContentStyle}>
             {renderCalendarValue &&
                 renderCalendarValue.weeklyDivision.map((week, idxA) => (
                     <li key={idxA + "week"}>
-                        {week.map((item) => {
+                        {week.map((item, idx) => {
                             switch (item.type) {
                                 case "beforeMonth":
                                     return (
@@ -100,7 +121,7 @@ const CalendarDate = ({
                                                 renderCalendarValue.nowYear
                                             }
                                             data-month={
-                                                renderCalendarValue.nowMonth
+                                                dayjs(`${renderCalendarValue.nowYear}-${renderCalendarValue.nowMonth}-${item.date}`).subtract(1,'month').format("MM")
                                             }
                                             data-date={item.date}
                                             data-day={item.day}
@@ -118,7 +139,7 @@ const CalendarDate = ({
                                                 renderCalendarValue.nowYear
                                             }
                                             data-month={
-                                                renderCalendarValue.nowMonth
+                                                dayjs(`${item.year}-${item.month}-${item.date}`).add(1,'month').format("MM")
                                             }
                                             data-date={item.date}
                                             data-day={item.day}

@@ -10,7 +10,6 @@ function App() {
     const { state } = useLocation();
 
     return (
-        <AnimatePresence>
             <Routes>
                 <Route path="/login" element={<Login></Login>}></Route>
                 <Route
@@ -23,7 +22,6 @@ function App() {
                     element={<PrivateRoute component={<HealthPage />} />}
                 />
             </Routes>
-        </AnimatePresence>
     );
 }
 

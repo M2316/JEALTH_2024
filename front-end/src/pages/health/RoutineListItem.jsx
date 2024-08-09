@@ -22,6 +22,7 @@ const RoutineListItem = ({ data, id, cardClickHandler,selectedFlag}) => {
     return (
         <motion.div
             onClick={(e)=>{cardSelectorHandler(e)}}
+            exit={{y: -20, opacity: 0, transition: { duration: 0.4 }}}
         >
             <HealthCard
                 addStyle={`height:70px; width:100%;justify-content:start; align-items:center;position:relative;`}

@@ -10,6 +10,7 @@ import CalendarDate from "./CalendarDate";
 import { useDispatch } from "react-redux";
 import { selectedDateCahnge } from "../../../redux/reducers/calendarSlice";
 import touchVibrateUtil from "../../../utils/touchVibrateUtil";
+import { duration } from "@mui/material";
 
 const weekName = ["Su","Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
@@ -20,9 +21,6 @@ const Calendar = () => {
     //redux to State AND dispatch
     const dispatch = useDispatch();
 
-
-    //캘린더 swipe 애니메이션 컨트롤러
-    const calendarSwipeControls = useAnimation();
 
     //캘린더에 들어갈 DATE 객체
     const [renderCalendarValue, setRenderCalendarValue] = useState({});
@@ -52,8 +50,8 @@ const Calendar = () => {
     
     
     //년도 변경 이벤트
-    const yearSelectorHandler = (e)=>{
-        const type = e.target.dataset.btnType;
+    const yearSelectorHandler = (type)=>{
+        // const type = e.target.dataset.btnType;
         touchVibrateUtil([50,0,100,0,50,0,100])
         
         if(type === "before"){
@@ -83,13 +81,42 @@ const Calendar = () => {
 
     //애니메이션 관련 코드 start ================================================================================
 
+    //캘린더 swipe 애니메이션 컨트롤러
+    const calendarSwipeControls = useAnimation();
+
+    const yearAnimateControls = useAnimation();
+    const monthAnimateControls = useAnimation();
+
+    const yearTextAnimation = (type)=>{
+        switch(type){
+            case "before":
+                yearAnimateControls.start({x:[0,-20],opacity:0},{transition:{duration:0.05}}).then(()=>{
+                    yearSelectorHandler(type);
+                    yearAnimateControls.start({x:[20,0],opacity:1},{transition:{duration:0.05}});
+                });                
+                break;
+
+            case "after":
+                yearAnimateControls.start({x:[0,20],opacity:0},{transition:{duration:0.05}}).then(()=>{
+                    yearSelectorHandler(type);
+                    yearAnimateControls.start({x:[-20,0],opacity:1},{transition:{duration:0.05}});
+                });                
+                break;
+        }
+    }
+
 
     //framer-motion [캘린더 swipe]
     const calendarSwipeHandle = (event, info)=>{
         if (info.offset.x > 100) {
             // 오른쪽으로 스와이프
-            touchVibrateUtil([50,0,50,0,50,])
-            calendarSwipeControls.start({ x: `calc(${info.offset.x}px + 100%`, opacity: 0 },{transition:{duration:0.03}}).then(() => {
+            touchVibrateUtil([200])
+            calendarSwipeControls.start({ x: `calc(${info.offset.x}px + 100%`, opacity: 0 },{transition:{duration:0.03}})
+            .then(()=>{
+                monthAnimateControls.start({y:[20,0],opacity:[0,1]},{transition:0.1});
+            })
+            .then(() => {          
+                
                 const requestDate = dayjs(selectDate.year+"-"+selectDate.month+"-"+selectDate.date).subtract(1,'month');
                 setSelectDate({
                     year:requestDate.format('YYYY'),
@@ -98,13 +125,15 @@ const Calendar = () => {
                     date:requestDate.format('DD'),
                     day:requestDate.format("ddd")
                 })
-            //   setCurrentIndex((prevIndex) => (prevIndex + 1) % cards.length);
-            calendarSwipeControls.start({ x: [-200,0], opacity: 1 });
-            });
+                calendarSwipeControls.start({ x: [-200,0], opacity: 1 });
+                
+            })
         } else if (info.offset.x < -100) {
             // 왼쪽으로 스와이프
-            touchVibrateUtil([50,0,50,0,50,])
-            calendarSwipeControls.start({ x: `calc(${info.offset.x}px + -100%`, opacity: 0 },{transition:{duration:0.03}}).then(() => {
+            touchVibrateUtil([200])
+            calendarSwipeControls.start({ x: `calc(${info.offset.x}px + -100%`, opacity: 0 },{transition:{duration:0.03}}).then(()=>{
+                monthAnimateControls.start({y:[-20,0],opacity:[0,1]},{transition:0.1});
+            }).then(() => {
                 const requestDate = dayjs(selectDate.year+"-"+selectDate.month+"-"+selectDate.date).add(1,'month');
                 setSelectDate({
                     year:requestDate.format('YYYY'),
@@ -113,7 +142,6 @@ const Calendar = () => {
                     date:requestDate.format('DD'),
                     day:requestDate.format("ddd")
                 })
-            //   setCurrentIndex((prevIndex) => (prevIndex - 1 + cards.length) % cards.length);
             calendarSwipeControls.start({ x: [200,0], opacity: 1 });
             });
         }else{
@@ -127,21 +155,21 @@ const Calendar = () => {
             <div css={calendarBodyStyle}>
                 <div css={calendarTitleStyle}>
                     <div css={yearStyle}>
-                        <MdKeyboardArrowLeft  onClick={yearSelectorHandler} data-btn-type="before"></MdKeyboardArrowLeft >
-                        <span name="date-year">{selectDate.year}</span>
-                        <MdKeyboardArrowRight  onClick={yearSelectorHandler} data-btn-type="after"></MdKeyboardArrowRight >
+                        <MdKeyboardArrowLeft  onClick={()=>yearTextAnimation("before")} ></MdKeyboardArrowLeft >
+                        <motion.span animate={yearAnimateControls} name="date-year">{selectDate.year}</motion.span>
+                        <MdKeyboardArrowRight  onClick={()=>yearTextAnimation("after")}></MdKeyboardArrowRight >
                     </div>
-                    <div css={monthStyle}>
+                    <motion.div animate={monthAnimateControls} css={monthStyle}>
                         <h1>{selectDate.month}</h1>
                         <h2>.{selectDate.monthName}</h2>
-                    </div>
+                    </motion.div>
                 </div>
 
                 <ul css={calendarSubTitleStyle}>
                     {weekName.map((name)=><li key={ name}>{name}</li>)}
                 </ul>
                 <motion.div css={calendarDateContainerStyle} drag="x" animate={calendarSwipeControls} onDragEnd={calendarSwipeHandle} initial={{ x: 0, opacity: 1 }}>
-                    <CalendarDate selectDate={selectDate} setSelectDate={setSelectDate} nowDate={date} renderCalendarValue={renderCalendarValue.nowMonth}></CalendarDate>
+                    <CalendarDate monthAnimateControls={monthAnimateControls} selectDate={selectDate} setSelectDate={setSelectDate} nowDate={date} renderCalendarValue={renderCalendarValue.nowMonth}></CalendarDate>
                 </motion.div>                
             </div>
         </HealthCard>
