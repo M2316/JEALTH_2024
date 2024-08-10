@@ -18,6 +18,7 @@ const Input = ({
     name,
     addStyle,
     inputBlurHandler,
+    onKeyDownHandler
 }) => {
     const InputIcon = () => {
         switch (inputIcon) {
@@ -51,6 +52,7 @@ const Input = ({
                     placeholder={placeholder}
                     name={name}
                     onBlur={inputBlurHandler}
+                    onKeyDown={onKeyDownHandler}
                 />
                 {inputState && (
                     <IoMdCloseCircle

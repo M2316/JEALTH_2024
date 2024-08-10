@@ -16,21 +16,22 @@ export const RoutineModifyTitleStyle = css`
     padding: 15px 0px 5px 0px;
 
     & input {
-        font-size: 12px;
+        font-size: 12px !important;
     }
 `;
 
 export const RoutineSearchTagStyle = css`
-    padding: 0px;
-    margin: 0px;
-    list-style: none;
+    
     display: flex;
     justify-content: space-evenly;
     width: 40%;
     position: relative;
     height: 42px;
     
-    & div{
+    & ul{
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
         width: 100%;
         top: calc(21px - 10px);
         display: flex;
@@ -64,10 +65,18 @@ export const RoutineSearchTagStyle = css`
     }
 `;
 
-export const RoutineModifyContentStyle = css`
+export const RoutineModifyContentWrapStyle = css`
     height: calc(100% - 70px - 72px);
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+
+`;
+
+export const RoutineModifyContentStyle = css`
     overflow-y: scroll;
     padding: 0px 10px;
+    
 
     & > div:first-of-type > div:first-of-type {
         margin-top: 10px;

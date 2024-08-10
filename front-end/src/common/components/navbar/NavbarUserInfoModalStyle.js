@@ -8,7 +8,7 @@ export const modalBodyStyle = css`
     width: calc(100% - 100px);
     position: absolute;
     top: 100px;
-    right: 0px;
+    left: 0px;
     padding: 20px;
     box-sizing: border-box;
 

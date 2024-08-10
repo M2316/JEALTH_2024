@@ -139,10 +139,6 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                         <ul css={RoutineTagStyle}>
                             {tagLevel1.map((item, idx) => (
                                 <motion.li
-                                    whileTap={{
-                                        scale: 1.4,
-                                        transition: { duration: 0.2 },
-                                    }}
                                     key={item + idx}
                                     data-tag-level="1"
                                     data-tag-value={item}
@@ -151,9 +147,6 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                                         item
                                             ? "#5BB2C0"
                                             : "#556080"} !important;
-                                        order: ${data.tagLevel1 === item
-                                            ? -1
-                                            : ""};
                                     `}
                                     onClick={(e) =>
                                         tagOnClickHandler(item, idx, "level1")
@@ -177,9 +170,6 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                                         item
                                             ? "#5BB2C0"
                                             : "#556080"} !important;
-                                        order: ${data.tagLevel2 === item
-                                            ? -1
-                                            : ""};
                                     `}
                                     onClick={(e) =>
                                         tagOnClickHandler(item, idx, "level2")
@@ -203,8 +193,6 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                                         item
                                             ? "#5BB2C0"
                                             : "#556080"} !important;
-                                        ${data.tagLevel3 === item &&
-                                        "order:-1;"}
                                     `}
                                     onClick={(e) =>
                                         tagOnClickHandler(item, idx, "level3")

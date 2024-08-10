@@ -10,6 +10,7 @@ import {
     cardWrapStyle,
     alertDialogStyle,
     alertDialogBoxStyle,
+    RoutineModifyContentWrapStyle,
 } from "./RoutineModifyModalStyle";
 import Input from "../../common/components/input/Input";
 import { animate, AnimatePresence, motion, useAnimate } from "framer-motion";
@@ -23,32 +24,38 @@ import {
 
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { css } from "@emotion/react";
 
 const RoutineModifyModal = ({ onClose }) => {
-    const [searchVal, setSearchVal] = useState("");
+    //redux state
     const dispatch = useDispatch();
-    const arrowControlRef = useRef([]);
-
-    const [arrowScope, arrowAnimation] = useAnimate();
-
-    const [searchTagV2Flag, setSearchTagV2Flag] = useState(false);
-    const [searchTagV3Flag, setSearchTagV3Flag] = useState(false);
-
-    const TagLevel2 = ["선택",...useSelector((state) => state.routineManage.tagLevel2)];
-    const TagLevel3 = ["선택",...useSelector((state) => state.routineManage.tagLevel3)];
-
-    //컴포넌트 초기 값 설정
-    useEffect(()=>{
-        
-
-    },[])
-
-    //redux에서 데이터 가져오기
     const routineManageList = useSelector(
         (state) => state.routineManage.targetMuscle
     );
     const routineList = useSelector((state) => state.routineManage.routineList);
     const [filteredRoutineList, setFilteredRoutineList] = useState([]);
+
+    //검색용 state
+    const [searchVal, setSearchVal] = useState({
+        text: "",
+        tagLevel2: "선택",
+        tagLevel3: "선택",
+    });
+    //테그 level별 리스트 가져오기
+    const tagLevel2List = useSelector((state) => state.routineManage.tagLevel2);
+    const tagLevel3List = useSelector((state) => state.routineManage.tagLevel3);
+    //검색에 적용할 tagList state
+    const [tagLevel2ListState, setTagLevel2ListState] = useState([
+        "선택",
+        ...tagLevel2List,
+    ]);
+    const [tagLevel3ListState, setTagLevel3ListState] = useState([
+        "선택",
+        ...tagLevel3List,
+    ]);
+    //검색용 tag ON/Off state
+    const [searchTagLevel2Flag, setSearchTagLevel2Flag] = useState(false);
+    const [searchTagLevel3Flag, setSearchTagLevel3Flag] = useState(false);
 
     //루틴 종목 클릭시 해당 루틴 목록 열기
     const workoutGroupClickHandler = (e, name) => {
@@ -62,37 +69,49 @@ const RoutineModifyModal = ({ onClose }) => {
         dispatch(RoutineListAdd(name));
     };
 
-    //ok 버튼 이벤트
+    //ok 버튼 이벤트 [모달 close]
     const okBtnHandler = (e) => {
         touchVibrateUtil([50, 50, 50]);
         onClose();
     };
 
-    //검색 태그 선택 이벤트
-    const searchTagChangeHandler = (tagName,tagLevel) => {
-        if(tagName === '선택'){
-            if(tagLevel === 'level2'){
-                setSearchTagV2Flag(!searchTagV2Flag)
-            }
-            if(tagLevel === 'level3'){
-                setSearchTagV3Flag(!searchTagV3Flag)
-            }
-        }else{
-            console.log("테그선택~")
+    //검색용 테그 변경 이벤트
+    const searchTagChangeHandler = (tagLevel, tagName) => {
+        touchVibrateUtil();
+        
+        setSearchVal({
+            ...searchVal,
+            [tagLevel]: tagName,
+        });
+        if(tagLevel === "tagLevel2"){
+            dispatch(targetMuscleOpenControl({ name:tagName, type: "manage" }));
         }
-
-
     };
+
+    //테그 두개중 한개가 열리면 나머지는 닫히도록 상태관리
+    useEffect(() => {
+        if (searchTagLevel2Flag) setSearchTagLevel3Flag(false);
+    }, [searchTagLevel2Flag]);
+    useEffect(() => {
+        if (searchTagLevel3Flag) setSearchTagLevel2Flag(false);
+    }, [searchTagLevel3Flag]);
 
     useEffect(() => {
         setFilteredRoutineList(
-            routineList.filter((filterItem) =>
-                filterItem.name.includes(searchVal)
+            routineList.filter(
+                (filterItem) =>
+                    filterItem.name.includes(searchVal.text) &&
+                    (filterItem.tagLevel2 === searchVal.tagLevel2 ||
+                        "선택" === searchVal.tagLevel2) &&
+                    (filterItem.tagLevel3 === searchVal.tagLevel3 ||
+                        "선택" === searchVal.tagLevel3)
             )
         );
     }, [searchVal, routineList]);
 
     //애니메이션 관련 코드 start================================================================================
+    const arrowControlRef = useRef([]);
+    const [arrowScope, arrowAnimation] = useAnimate();
     const cardGroupRef = useRef([]);
     const [cardGroupChangeFlag, setCardGroupChangeFlag] = useState(false);
     const cardGroupChangeTimeoutRef = useRef();
@@ -136,63 +155,127 @@ const RoutineModifyModal = ({ onClose }) => {
     //애니메이션 관련 코드 end==================================================================================
 
     return (
-        <div css={RoutineModifyContainerStyle} ref={arrowScope}>
+        <div
+            css={RoutineModifyContainerStyle}
+            ref={arrowScope}
+            onClick={(e) => {
+                if (e.target.dataset.tagType === "search") return;
+                setSearchTagLevel2Flag(false);
+                setSearchTagLevel3Flag(false);
+            }}
+        >
             <div css={RoutineModifyTitleStyle}>
                 <Input
                     inputIcon="magnify"
                     valueType="text"
-                    inputChangeHandler={(e) => setSearchVal(e.target.value)}
-                    inputClearHandler={() => setSearchVal("")}
-                    inputState={searchVal}
+                    inputChangeHandler={(e) =>
+                        setSearchVal({ ...searchVal, text: e.target.value })
+                    }
+                    inputClearHandler={() =>
+                        setSearchVal({ ...searchVal, text: "" })
+                    }
+                    inputState={searchVal.text}
                     placeholder="검색어를 입력해 주세요."
                     addStyle={`width:60%; margin:0; font-size:12px !important;`}
-                    name="searchVal"
+                    name="searchVal-text"
+                    onKeyDownHandler={(e)=>{
+                        if(e.key === "Enter"){
+                            e.target.blur();
+                        }
+                    }}
                 ></Input>
-                <ul css={RoutineSearchTagStyle}>
-                    <div>
-                        {searchTagV2Flag ? (
-                            TagLevel2.map((tagName, idx) => (
-                                <li
-                                    key={"searchTag"+idx}
-                                    onClick={()=>searchTagChangeHandler(tagName,"level2")}
-                                >
-                                    #{tagName}
-                                </li>
-                            ))
-                        ) : (
-                            <li
-                                onClick={() => {
-                                    setSearchTagV2Flag(!searchTagV2Flag);
-                                    setSearchTagV3Flag(false);
-                                }}
-                            >
-                                #선택
-                            </li>
-                        )}
-                    </div>
-                    <div>
-                        {searchTagV3Flag ? (
-                            TagLevel3.map((tagName, idx) => (
-                                <li
-                                    key={"searchTag" + tagName + idx}
-                                    onClick={()=>searchTagChangeHandler(tagName,"level3")}
-                                >
-                                    #{tagName}
-                                </li>
-                            ))
-                        ) : (
-                            <li
-                                onClick={() => {
-                                    setSearchTagV3Flag(!searchTagV3Flag);
-                                    setSearchTagV2Flag(false);
-                                }}
-                            >
-                                #선택
-                            </li>
-                        )}
-                    </div>
-                </ul>
+                <div css={RoutineSearchTagStyle}>
+                    <ul>
+                        <li
+                            data-tag-type="search"
+                            onClick={() =>
+                                setSearchTagLevel2Flag(!searchTagLevel2Flag)
+                            }
+                        >
+                            #{searchVal.tagLevel2}
+                        </li>
+                        <AnimatePresence>
+                            {searchTagLevel2Flag &&
+                                tagLevel2ListState.map((tag,idx) => {
+                                    if (tag === searchVal.tagLevel2) return;
+                                    return (
+                                        <motion.li
+                                            key={tag+idx+"searchTag"}
+                                            initial={{
+                                                opacity: 0,
+                                                transition: { duration: 0.3 },
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                transition: { duration: 0.3 },
+                                            }}
+                                            exit={{
+                                                opacity: 0,
+                                                transition: { duration: 0.3 },
+                                            }}
+                                            onClick={(e) =>
+                                                searchTagChangeHandler(
+                                                    "tagLevel2",
+                                                    tag
+                                                )
+                                            }
+                                            css={css`
+                                                background-color: #556080 !important;
+                                            `}
+                                        >
+                                            #{tag}
+                                        </motion.li>
+                                    );
+                                })}
+                        </AnimatePresence>
+                    </ul>
+                    <ul>
+                        <li
+                            data-tag-type="search"
+                            onClick={() =>
+                                setSearchTagLevel3Flag(!searchTagLevel3Flag)
+                            }
+                        >
+                            #{searchVal.tagLevel3}
+                        </li>
+                        <AnimatePresence>
+                            {searchTagLevel3Flag &&
+                                tagLevel3ListState.map((tag,idx) => {
+                                    if (tag === searchVal.tagLevel3) return;
+                                    return (
+                                        <motion.li
+                                            key={tag+idx+"searchTag"}
+                                            initial={{
+                                                opacity: 0,
+                                                transition: { duration: 0.3 },
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                transition: { duration: 0.3 },
+                                            }}
+                                            exit={{
+                                                opacity: 0,
+                                                transition: { duration: 0.3 },
+                                            }}
+                                            onClick={(e) =>
+                                                searchTagChangeHandler(
+                                                    "tagLevel3",
+                                                    tag
+                                                )
+                                            }
+                                            css={css`
+                                                background-color: #556080 !important;
+                                            `}
+                                        >
+                                            #{tag}
+                                        </motion.li>
+                                    );
+                                })}
+                        </AnimatePresence>
+                    </ul>
+                </div>
             </div>
+            <div css={RoutineModifyContentWrapStyle}>
             <motion.div css={RoutineModifyContentStyle}>
                 {routineManageList &&
                     routineManageList.map((targetMuscle, idxA) => (
@@ -260,6 +343,7 @@ const RoutineModifyModal = ({ onClose }) => {
                         </div>
                     ))}
             </motion.div>
+            </div>
             <div css={RoutineModalOkButStyle}>
                 <motion.button
                     onClick={(e) => okBtnHandler(e)}

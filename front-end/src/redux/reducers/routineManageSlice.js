@@ -138,20 +138,32 @@ export const routineManageSlice = createSlice({
             state.routineList.find(findItem=>findItem.id === action.payload.id).name = action.payload.name;
         },
         RoutineTagChange : (state, action)=>{
-            console.log("동작");
 
             switch(action.payload.type){
                 case "level1":
-                    state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel1 = action.payload.tag;
+                    //level1 테그는 정적 테그로 변경되면 안됨
+                    //level2 변경시 자동으로 변경됨
                     break;
                 case "level2":
+
+
+                    //level1 테그 자동 적용
+                    if(["가슴", "어깨", "팔", "등"].filter((filterItem)=>filterItem === action.payload.tag).length > 0){
+                        state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel1 = "상체";
+                    }
+                    if(["하체"].filter((filterItem)=>filterItem === action.payload.tag).length > 0){
+                        state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel1 = "하체";
+                    }
+                    if(["복근"].filter((filterItem)=>filterItem === action.payload.tag).length > 0){
+                        state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel1 = "코어";
+                    }
+
                     state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel2 = action.payload.tag;
                     break;
                 case "level3":
                     state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel3 = action.payload.tag;
                     break;
             }
-            console.log(state.routineList.find(findItem=>findItem.id === action.payload.routine.id).tagLevel2)
 
             
         }
