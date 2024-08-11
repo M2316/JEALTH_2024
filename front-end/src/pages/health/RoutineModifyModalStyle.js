@@ -122,6 +122,11 @@ export const routineCardTopTapStyle = css`
     }
 `;
 
+export const routineGroupSizeStyle = css`
+    padding: 0px 3px;
+    font-size: 13px !important;
+`;
+
 export const cardWrapStyle = css`
     position: relative;
     width: 100%;
@@ -147,6 +152,28 @@ export const RoutineModalOkButStyle = css`
         border-radius: 10px;
         box-shadow: 4px 4px 4px #323232;
     }
+`;
+
+export const cardDeleteImgBoxStyle = css`
+    position: absolute;
+    right: -70px;
+    height: 60px;
+    width: 60px;
+    background: #F1817B;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    flex-direction: column;
+    svg{
+        font-size: 30px;
+    }
+    span{
+        font-size: 12px;
+    }
+
 `;
 
 export const alertDialogBoxStyle = css`

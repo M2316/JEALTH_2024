@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     RoutineCardContainerStyle,
     RoutineCardTopTapStyle,
+    routineGroupSizeStyle,
     RoutineGroupStyle,
     RoutineListContainerStyle,
     RoutineListTitleStyle,
     RoutineModalContentStyle,
+    RoutineModalContentWrapStyle,
     RoutineModalOkButStyle,
 } from "./RoutineListModalStyle";
 
@@ -60,7 +62,7 @@ const RoutineListModal = ({ onClose, isOpen }) => {
     };
 
     const okBtnHandler = (e) => {
-        if(selectedRoutineList.length > 0){
+        if (selectedRoutineList.length > 0) {
             touchVibrateUtil([100, 50, 100, 50, 200]);
             dispatch(
                 routineListAppend({
@@ -68,7 +70,7 @@ const RoutineListModal = ({ onClose, isOpen }) => {
                     selectedRoutine: selectedRoutineList,
                 })
             );
-        }else{
+        } else {
             touchVibrateUtil([50, 50, 50]);
         }
         onClose();
@@ -96,10 +98,10 @@ const RoutineListModal = ({ onClose, isOpen }) => {
                     { transition: { duration: 0.3 } }
                 );
                 // const cardGroupOpenAnimation = async () => {
-                //     await 
+                //     await
                 // };
                 // cardGroupOpenAnimation();
-            } else{
+            } else {
                 animate(arrowControlRef.current[idx], { rotate: 0 });
             }
         });
@@ -113,71 +115,91 @@ const RoutineListModal = ({ onClose, isOpen }) => {
                 <h1>종목 선택</h1>
             </div>
 
-            <div css={RoutineModalContentStyle}>
-                {targetMuscleList &&
-                    targetMuscleList.map((targetMuscle, idxA) => (
-                        <div
-                            key={targetMuscle.name + idxA}
-                            css={RoutineGroupStyle}
-                        >
+            <div css={RoutineModalContentWrapStyle}>
+                <div css={RoutineModalContentStyle}>
+                    {targetMuscleList &&
+                        targetMuscleList.map((targetMuscle, idxA) => (
                             <div
-                                css={RoutineCardTopTapStyle}
-                                onClick={(e) =>
-                                    workoutGroupClickHandler(
-                                        e,
-                                        targetMuscle.name
-                                    )
-                                }
+                                key={targetMuscle.name + idxA}
+                                css={RoutineGroupStyle}
                             >
-                                <div>
-                                    <span>{targetMuscle.name}</span>
-                                    <motion.span
-                                        ref={(el) =>
-                                            (arrowControlRef.current[idxA] = el)
-                                        }
-                                    >
-                                        <BiDownArrow />
-                                    </motion.span>
+                                <div
+                                    css={RoutineCardTopTapStyle}
+                                    onClick={(e) =>
+                                        workoutGroupClickHandler(
+                                            e,
+                                            targetMuscle.name
+                                        )
+                                    }
+                                >
+                                    <div>
+                                        <span>{targetMuscle.name}</span>
+                                        <span css={routineGroupSizeStyle}>
+                                            (
+                                            {
+                                                routineManageList.filter(
+                                                    (routine) =>
+                                                        targetMuscle.name ===
+                                                        routine.tagLevel2
+                                                ).length
+                                            }
+                                            )
+                                        </span>
+                                        <motion.span
+                                            ref={(el) =>
+                                                (arrowControlRef.current[idxA] =
+                                                    el)
+                                            }
+                                        >
+                                            <BiDownArrow />
+                                        </motion.span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    css={RoutineCardContainerStyle}
+                                    key="routine-card-component"
+                                    ref={(el) =>
+                                        (cardGroupRef.current[idxA] = el)
+                                    }
+                                >
+                                    <AnimatePresence>
+                                        {targetMuscle.selectorModalView &&
+                                            routineManageList
+                                                .filter(
+                                                    (routine) =>
+                                                        targetMuscle.name ===
+                                                        routine.tagLevel2
+                                                )
+                                                .map((item, idxB) => (
+                                                    <RoutineListItem
+                                                        data={item}
+                                                        key={item.name + idxB}
+                                                        cardClickHandler={
+                                                            cardClickHandler
+                                                        }
+                                                        selectedFlag={
+                                                            !!selectedRoutineList.find(
+                                                                (findItem) =>
+                                                                    findItem.id ===
+                                                                    item.id
+                                                            )
+                                                        }
+                                                    ></RoutineListItem>
+                                                ))}
+                                    </AnimatePresence>
                                 </div>
                             </div>
-
-                            <div
-                                css={RoutineCardContainerStyle}
-                                key="routine-card-component"
-                                ref={(el) => (cardGroupRef.current[idxA] = el)}
-                                
-                            >
-                                <AnimatePresence>
-                                    {targetMuscle.selectorModalView &&
-                                        routineManageList
-                                            .filter(
-                                                (routine) =>
-                                                    targetMuscle.name ===
-                                                    routine.tagLevel2
-                                            )
-                                            .map((item, idxB) => (
-                                                <RoutineListItem
-                                                    data={item}
-                                                    key={item.name + idxB}
-                                                    cardClickHandler={
-                                                        cardClickHandler
-                                                    }
-                                                    selectedFlag={
-                                                        !!selectedRoutineList.find(
-                                                            (findItem) =>
-                                                                findItem.id ===
-                                                                item.id
-                                                        )
-                                                    }
-                                                ></RoutineListItem>
-                                            ))}
-                                </AnimatePresence>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                </div>
             </div>
             <div css={RoutineModalOkButStyle}>
-                <motion.button onClick={(e) => okBtnHandler(e)} whileTap={{scale:1.2}}>OK</motion.button>
+                <motion.button
+                    onClick={(e) => okBtnHandler(e)}
+                    whileTap={{ scale: 1.2 }}
+                >
+                    OK
+                </motion.button>
             </div>
         </div>
     );

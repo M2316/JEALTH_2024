@@ -117,11 +117,25 @@ export const routineManageSlice = createSlice({
         },
         //신규 루틴 종목 추가
         RoutineListAdd : (state, action) => { 
+
+            let tagLevel1 = "";
+
+
+            if(["가슴", "어깨", "팔", "등"].filter((filterItem)=>filterItem === action.payload).length > 0){
+                tagLevel1 = "상체";
+            }
+            if(["하체"].filter((filterItem)=>filterItem === action.payload).length > 0){
+                tagLevel1 = "하체";
+            }
+            if(["복근"].filter((filterItem)=>filterItem === action.payload).length > 0){
+                tagLevel1 = "코어";
+            }
+
             state.routineList.unshift({
                 id:uuidv4(),
                 name: "",
                 imgCode: "",
-                tagLevel1: "",
+                tagLevel1: tagLevel1,
                 tagLevel2: action.payload,
                 tagLevel3: "",
             })
@@ -166,10 +180,13 @@ export const routineManageSlice = createSlice({
             }
 
             
+        },
+        deleteRoutine : (state, action)=>{
+            state.routineList = state.routineList.filter((filterItem)=>filterItem.id !== action.payload);
         }
     },
 });
 
-export const { targetMuscleOpenControl, RoutineListAdd, RoutineNameChange, RoutineTagChange, } = routineManageSlice.actions;
+export const { targetMuscleOpenControl, RoutineListAdd, RoutineNameChange, RoutineTagChange, deleteRoutine } = routineManageSlice.actions;
 
 export default routineManageSlice.reducer;

@@ -35,6 +35,7 @@ export const healthCardTitleStyle = css`
     display: flex;
     padding: 15px;
     box-sizing: border-box;
+    align-items: center;
 
     
 
@@ -149,10 +150,12 @@ display: flex;
 flex-direction: column;
 justify-content: space-evenly;
 width: calc(100% - 75px);
+
 `;
 
 export const titleStyle = css`
-font-size: 1.5em;
+font-size: 1.4em;
+padding-bottom: 5px;
 width: 100%;
 
 `;
@@ -175,6 +178,13 @@ export const subTitleStyle = css`
         font-weight: 900;
         padding: 0px 10px;
     }
+`;
+
+export const EmptyCardTitleBoxStyle = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 `;
 
 

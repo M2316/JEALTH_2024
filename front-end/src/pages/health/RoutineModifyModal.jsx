@@ -11,6 +11,8 @@ import {
     alertDialogStyle,
     alertDialogBoxStyle,
     RoutineModifyContentWrapStyle,
+    routineGroupSizeStyle,
+    cardDeleteImgBoxStyle,
 } from "./RoutineModifyModalStyle";
 import Input from "../../common/components/input/Input";
 import { animate, AnimatePresence, motion, useAnimate } from "framer-motion";
@@ -18,6 +20,7 @@ import { BiDownArrow } from "react-icons/bi";
 import RoutineModifyItem from "./RoutineModifyItem";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    deleteRoutine,
     RoutineListAdd,
     targetMuscleOpenControl,
 } from "../../redux/reducers/routineManageSlice";
@@ -25,6 +28,7 @@ import {
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { css } from "@emotion/react";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 const RoutineModifyModal = ({ onClose }) => {
     //redux state
@@ -57,6 +61,9 @@ const RoutineModifyModal = ({ onClose }) => {
     const [searchTagLevel2Flag, setSearchTagLevel2Flag] = useState(false);
     const [searchTagLevel3Flag, setSearchTagLevel3Flag] = useState(false);
 
+    //루틴 삭제시킬 루틴 ID를 담아두는 state
+    const [deleteRoutineId,setdeleteRoutineId] = useState({});
+
     //루틴 종목 클릭시 해당 루틴 목록 열기
     const workoutGroupClickHandler = (e, name) => {
         touchVibrateUtil();
@@ -78,15 +85,39 @@ const RoutineModifyModal = ({ onClose }) => {
     //검색용 테그 변경 이벤트
     const searchTagChangeHandler = (tagLevel, tagName) => {
         touchVibrateUtil();
-        
+
         setSearchVal({
             ...searchVal,
             [tagLevel]: tagName,
         });
-        if(tagLevel === "tagLevel2"){
-            dispatch(targetMuscleOpenControl({ name:tagName, type: "manage" }));
+        if (tagLevel === "tagLevel2") {
+            dispatch(
+                targetMuscleOpenControl({ name: tagName, type: "manage" })
+            );
         }
     };
+
+    //Card 삭제 이벤트
+    const cardDragHandler = (e,xOffset,routineId,idx)=>{
+
+        if(xOffset > 0){
+            //우측 드레그 이벤트 취소 
+            return;
+        }else if(xOffset > -150){
+            //드레그 모션이 부족하면 이벤트 취소
+            return;
+        }
+        
+        touchVibrateUtil([200,50,200,50,200]);
+        animate(cardListRef.current.filter((item,idx)=>item !== null)[idx],{x:-500},{duration:0.4}).then(()=>{
+            setdeleteRoutineId({id:routineId,index:idx});
+        })
+
+    }
+
+    useEffect(()=>{
+        dispatch(deleteRoutine(deleteRoutineId.id));
+    },[deleteRoutineId])
 
     //테그 두개중 한개가 열리면 나머지는 닫히도록 상태관리
     useEffect(() => {
@@ -109,6 +140,8 @@ const RoutineModifyModal = ({ onClose }) => {
         );
     }, [searchVal, routineList]);
 
+    
+
     //애니메이션 관련 코드 start================================================================================
     const arrowControlRef = useRef([]);
     const [arrowScope, arrowAnimation] = useAnimate();
@@ -116,6 +149,7 @@ const RoutineModifyModal = ({ onClose }) => {
     const [cardGroupChangeFlag, setCardGroupChangeFlag] = useState(false);
     const cardGroupChangeTimeoutRef = useRef();
     const alertRef = useRef();
+    const cardListRef = useRef([]);
 
     useEffect(() => {
         //루틴 목록이 열렸을때 화살표 회전 애니메이션
@@ -178,8 +212,8 @@ const RoutineModifyModal = ({ onClose }) => {
                     placeholder="검색어를 입력해 주세요."
                     addStyle={`width:60%; margin:0; font-size:12px !important;`}
                     name="searchVal-text"
-                    onKeyDownHandler={(e)=>{
-                        if(e.key === "Enter"){
+                    onKeyDownHandler={(e) => {
+                        if (e.key === "Enter") {
                             e.target.blur();
                         }
                     }}
@@ -196,11 +230,11 @@ const RoutineModifyModal = ({ onClose }) => {
                         </li>
                         <AnimatePresence>
                             {searchTagLevel2Flag &&
-                                tagLevel2ListState.map((tag,idx) => {
+                                tagLevel2ListState.map((tag, idx) => {
                                     if (tag === searchVal.tagLevel2) return;
                                     return (
                                         <motion.li
-                                            key={tag+idx+"searchTag"}
+                                            key={tag + idx + "searchTag"}
                                             initial={{
                                                 opacity: 0,
                                                 transition: { duration: 0.3 },
@@ -240,11 +274,11 @@ const RoutineModifyModal = ({ onClose }) => {
                         </li>
                         <AnimatePresence>
                             {searchTagLevel3Flag &&
-                                tagLevel3ListState.map((tag,idx) => {
+                                tagLevel3ListState.map((tag, idx) => {
                                     if (tag === searchVal.tagLevel3) return;
                                     return (
                                         <motion.li
-                                            key={tag+idx+"searchTag"}
+                                            key={tag + idx + "searchTag"}
                                             initial={{
                                                 opacity: 0,
                                                 transition: { duration: 0.3 },
@@ -276,73 +310,109 @@ const RoutineModifyModal = ({ onClose }) => {
                 </div>
             </div>
             <div css={RoutineModifyContentWrapStyle}>
-            <motion.div css={RoutineModifyContentStyle}>
-                {routineManageList &&
-                    routineManageList.map((targetMuscle, idxA) => (
-                        <div
-                            css={routineCardContainerStyle}
-                            key={targetMuscle + idxA}
-                        >
-                            <div css={routineCardTopTapStyle}>
-                                {targetMuscle.manageModalView && (
-                                    <button
+                <motion.div css={RoutineModifyContentStyle}>
+                    {routineManageList &&
+                        routineManageList.map((targetMuscle, idxA) => (
+                            <div
+                                css={routineCardContainerStyle}
+                                key={targetMuscle + idxA}
+                            >
+                                <div css={routineCardTopTapStyle}>
+                                    {targetMuscle.manageModalView && (
+                                        <button
+                                            onClick={(e) =>
+                                                routineListAddHandler(
+                                                    e,
+                                                    targetMuscle.name
+                                                )
+                                            }
+                                        >
+                                            루틴 추가
+                                        </button>
+                                    )}
+                                    <div
                                         onClick={(e) =>
-                                            routineListAddHandler(
+                                            workoutGroupClickHandler(
                                                 e,
                                                 targetMuscle.name
                                             )
                                         }
                                     >
-                                        루틴 추가
-                                    </button>
-                                )}
+                                        
+                                        <span>{targetMuscle.name}</span>
+                                        <span css={routineGroupSizeStyle}>
+                                            (
+                                            {
+                                                filteredRoutineList.filter(
+                                                    (routine) =>
+                                                        targetMuscle.name ===
+                                                        routine.tagLevel2
+                                                ).length
+                                            }
+                                            )
+                                        </span>
+                                        <motion.span
+                                            ref={(el) =>
+                                                (arrowControlRef.current[idxA] =
+                                                    el)
+                                            }
+                                        >
+                                            <BiDownArrow />
+                                        </motion.span>
+                                    </div>
+                                </div>
                                 <div
-                                    onClick={(e) =>
-                                        workoutGroupClickHandler(
-                                            e,
-                                            targetMuscle.name
-                                        )
+                                    ref={(el) =>
+                                        (cardGroupRef.current[idxA] = el)
                                     }
                                 >
-                                    <span>{targetMuscle.name}</span>
-                                    <motion.span
-                                        ref={(el) =>
-                                            (arrowControlRef.current[idxA] = el)
-                                        }
-                                    >
-                                        <BiDownArrow />
-                                    </motion.span>
+                                    <AnimatePresence>
+                                        {targetMuscle.manageModalView &&
+                                            filteredRoutineList
+                                                .filter(
+                                                    (routine) =>
+                                                        targetMuscle.name ===
+                                                        routine.tagLevel2
+                                                )
+                                                .map((item, idx) => (
+                                                    <motion.div
+                                                        ref={(el)=>(cardListRef.current[idx] = el)}
+                                                        drag="x"
+                                                        dragConstraints={{
+                                                            left: 0,
+                                                            right: 0,
+                                                        }}
+                                                        onDragEnd={(e,info)=>cardDragHandler(e,info.offset.x,item.id,idx)}
+                                                        initial={{
+                                                            y: -20,
+                                                            opacity: 0,
+                                                            transition: { duration: 0.3 },
+                                                        }}
+                                                        animate={{
+                                                            y: 0,
+                                                            opacity: 1,
+                                                            transition: { duration: 0.3 },
+                                                        }}
+                                                        css={cardWrapStyle}
+                                                        key={item.id}
+                                                    >
+                                                        <RoutineModifyItem
+                                                            id={item.id}
+                                                            setCardGroupChangeFlag={
+                                                                setCardGroupChangeFlag
+                                                            }
+                                                        ></RoutineModifyItem>
+                                                        <div css={cardDeleteImgBoxStyle}>
+                                                            <RiDeleteBinLine></RiDeleteBinLine>
+                                                            <span>삭제</span>
+                                                        </div>
+                                                    </motion.div>
+                                                ))}
+                                    </AnimatePresence>
                                 </div>
                             </div>
-                            <div
-                                ref={(el) => (cardGroupRef.current[idxA] = el)}
-                            >
-                                <AnimatePresence>
-                                    {targetMuscle.manageModalView &&
-                                        filteredRoutineList
-                                            .filter(
-                                                (routine) =>
-                                                    targetMuscle.name ===
-                                                    routine.tagLevel2
-                                            )
-                                            .map((item, idx) => (
-                                                <div
-                                                    css={cardWrapStyle}
-                                                    key={item.id}
-                                                >
-                                                    <RoutineModifyItem
-                                                        id={item.id}
-                                                        setCardGroupChangeFlag={
-                                                            setCardGroupChangeFlag
-                                                        }
-                                                    ></RoutineModifyItem>
-                                                </div>
-                                            ))}
-                                </AnimatePresence>
-                            </div>
-                        </div>
-                    ))}
-            </motion.div>
+                        ))}
+                </motion.div>
             </div>
             <div css={RoutineModalOkButStyle}>
                 <motion.button

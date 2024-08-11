@@ -27,10 +27,11 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
     );
 
     const tagLevel1 = useSelector((state) => state.routineManage.tagLevel1);
-    const tagLevel2 = useSelector((state) => state.routineManage.tagLevel2);
+    const tagLevel2 = useSelector((state) => state.routineManage.tagLevel2);  
     const tagLevel3 = useSelector((state) => state.routineManage.tagLevel3);
 
-    const [routineName, setRoutineName] = useState(data.name);
+    const [routineName, setRoutineName] = useState(data ? data.name : "");
+
     const routineNameRef = useRef();
 
     const tagOnClickHandler = (selectTag, idx, selectTagLevel) => {
@@ -98,10 +99,11 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                 exitAnimationFlag && {
                     y: -20,
                     opacity: 0,
-                    transition: { duration: 0.4 },
+                    transition: { duration: 0.2 },
                 }
             }
             ref={scope}
+            onMouseDown={(e)=>console.log(e)}
         >
             <HealthCard
                 addStyle={`width:100%;justify-content:start; align-items:center;padding:10px; box-sizing: border-box;flex-direction: column; position: relative;`}
@@ -143,7 +145,7 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                                     data-tag-level="1"
                                     data-tag-value={item}
                                     css={css`
-                                        background-color: ${data.tagLevel1 ===
+                                        background-color: ${data && data.tagLevel1 ===
                                         item
                                             ? "#5BB2C0"
                                             : "#556080"} !important;
@@ -166,7 +168,7 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                                     data-tag-level="2"
                                     data-tag-value={item}
                                     css={css`
-                                        background-color: ${data.tagLevel2 ===
+                                        background-color: ${data && data.tagLevel2 ===
                                         item
                                             ? "#5BB2C0"
                                             : "#556080"} !important;
@@ -189,7 +191,7 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                                     data-tag-level="3"
                                     data-tag-value={item}
                                     css={css`
-                                        background-color: ${data.tagLevel3 ===
+                                        background-color: ${data && data.tagLevel3 ===
                                         item
                                             ? "#5BB2C0"
                                             : "#556080"} !important;

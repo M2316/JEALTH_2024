@@ -15,10 +15,19 @@ export const RoutineListTitleStyle = css`
         margin: 15px 0px;
     }
 `;
+
+export const RoutineModalContentWrapStyle = css`
+    display: flex;
+    height: calc(700px - 73px - 73px);
+    justify-content: center;
+    flex-direction: column;   
+
+`;
+
+
 export const RoutineModalContentStyle = css`
     padding: 0px 15px;
     width: 100%;
-    height: calc(700px - 73px - 73px);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -53,6 +62,13 @@ export const RoutineCardTopTapStyle = css`
         }
     }
 `;
+
+export const routineGroupSizeStyle = css`
+    padding: 0px 3px;
+    font-size: 13px !important;
+`;
+
+
 export const RoutineCardContainerStyle = css`
 
 `;
