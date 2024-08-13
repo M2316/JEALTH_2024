@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ScrollPicker from "../../common/components/scrollPicker/ScrollPicker";
 import AppFooter from "../../common/components/appFooter/AppFooter";
 import {
@@ -19,19 +19,24 @@ import {
 import healthIcon from "@img/sports/health-white.png";
 import deleteIcon from "@img/record-delete.png";
 import uncheckIcon from "@img/record-uncheck.png";
+import clearIcon from "@img/record-clear.png";
 import circleCheckIcon from "@img/circle-check-icon.png";
+import negativeCircleCheckIcon from "@img/negative-circle-check-icon.png";
 import setAddIcon from "@img/set-add-btn-icon.png";
 import Navbar from "../../common/components/navbar/Navbar";
 import HealthCard from "./components/HealthCard";
-import { Box, Modal } from "@mui/material";
+import { Box, duration, Modal } from "@mui/material";
 import Calendar from "./components/Calendar";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    recordDelete,
+    recordDoneChange,
     routineRecordAppend,
     routineRecordUpdate,
 } from "../../redux/reducers/workoutRecordSlice";
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
+import { css } from "@emotion/react";
 
 const HealthPage = () => {
     const [routineRecordValue, setRoutineRecordValue] = useState({});
@@ -52,8 +57,10 @@ const HealthPage = () => {
             recordSetNum,
         });
 
-        const selectedSetInfo = thisDayRoutine.workoutList.find(findItem=>findItem.id === routineId).workSetList.find(findItem=>findItem.setNum === recordSetNum);
-        setRoutineRecordValue(selectedSetInfo)
+        const selectedSetInfo = thisDayRoutine.workoutList
+            .find((findItem) => findItem.id === routineId)
+            .workSetList.find((findItem) => findItem.setNum === recordSetNum);
+        setRoutineRecordValue(selectedSetInfo);
         setNumberPickerOpen(true);
     };
 
@@ -89,101 +96,232 @@ const HealthPage = () => {
         }
     };
 
-    const recordSetAppendHandler = (e,routineId) => {
+    const recordSetAppendHandler = (e, routineId) => {
         touchVibrateUtil([100, 50, 100, 50, 100]);
-        dispatch(routineRecordAppend({ id:routineId, workDate:selectedDate.strDate }));
+        dispatch(
+            routineRecordAppend({
+                id: routineId,
+                workDate: selectedDate.strDate,
+            })
+        );
         e.target.scrollIntoView({ behavior: "smooth" });
     };
+
+    const recordDragEndHandler = (
+        dragX,
+        routineId,
+        recordSetNum,
+        setDoneFlag,
+        e
+    ) => {
+        if (dragX > 0) {
+            if (Math.abs(dragX) < 100) return; //드레그 위치 부족하면 return;
+            touchVibrateUtil();
+            dispatch(
+                recordDoneChange({
+                    routineId,
+                    recordSetNum,
+                    flag: !setDoneFlag,
+                    selectedDate,
+                })
+            );
+        } else {
+            if (Math.abs(dragX) < 150) return; //드레그 위치 부족하면 return;
+
+
+            touchVibrateUtil([100, 50, 100, 50, 100]);
+            dispatch(recordDelete({ routineId, recordSetNum, selectedDate }));
+        }
+    };
+
+    //애니메이션 관련 코드 start==============================================================================
+    const [scope,animate] = useAnimate();
+
+    //애니메이션 관련 코드 end================================================================================
 
     return (
         <div css={healthPageBodyStyle}>
             <Navbar logo={healthIcon}></Navbar>
 
             <Calendar></Calendar>
-            {thisDayRoutine ?
+            {thisDayRoutine ? (
                 thisDayRoutine.workoutList.map((routine, idx) => (
+                    <AnimatePresence mode="wait" key={routine.id + idx}>
+                        <motion.div
+                            css={css`
+                                width: 100%;
+                                justify-content: center;
+                                display: flex;
+                            `}
+                            initial={{ opacity: 0, y: 100 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <HealthCard
+                                addStyle={`width:90%;display:flex;flex-direction:column;justify-content:start;`}
+                            >
+                                <div css={healthCardTitleStyle}>
+                                    <div css={healthCardIconStyle}>
+                                        <img src={healthIcon} />
+                                    </div>
+                                    <div css={healthCardTitleBoxStyle}>
+                                        <h3 css={titleStyle}>{routine.name}</h3>
+                                        <div css={subTitleStyle}>
+                                            <span>#{routine.tagLevel2}</span>
+                                            <button>Done</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ul css={healthCardContentStyle}>
+                                    {routine.workSetList &&
+                                        routine.workSetList.map(
+                                            (record, idxB) => (
+                                                <AnimatePresence mode="wait" key={
+                                                    routine.id + idx + idxB
+                                                }>
+                                                <motion.li
+                                                initial={{x:0,y:0}}
+                                                exit={{y:20,transition:{duration:0}}}
+                                                    key={
+                                                        routine.id + idx + idxB + "litag"
+                                                    }
+                                                >
+                                                    <motion.div
+                                                    key={routine.id +
+                                                        record.setNum +
+                                                        record.setDoneFlag}
+                                                        initial={{
+                                                            y: -10,
+                                                            opacity: 0,
+                                                        }}
+                                                        animate={{
+                                                            y: 0,
+                                                            opacity: 1,
+                                                        }}
+                                                        
+                                                        drag="x"
+                                                        dragConstraints={{
+                                                            left: 0,
+                                                            right: 0,
+                                                        }}
+                                                        dragElastic={1}
+                                                        css={workoutSetBoxStyle}
+                                                        onDragEnd={(
+                                                            e,
+                                                            drag
+                                                        ) => {
+                                                            recordDragEndHandler(
+                                                                drag.offset.x,
+                                                                routine.id,
+                                                                record.setNum,
+                                                                record.setDoneFlag,
+                                                                e
+                                                            );
+                                                        }}
+                                                    >
+                                                        {record.setDoneFlag ? (
+                                                            <img
+                                                                src={clearIcon}
+                                                            />
+                                                        ) : (
+                                                            <img
+                                                                src={
+                                                                    uncheckIcon
+                                                                }
+                                                            />
+                                                        )}
+                                                        <div
+                                                            css={
+                                                                workoutSetInfoStyle
+                                                            }
+                                                            onClick={(e) =>
+                                                                numberPickerHandler(
+                                                                    e,
+                                                                    routine.id,
+                                                                    record.setNum
+                                                                )
+                                                            }
+                                                        >
+                                                            <div>
+                                                                {record.setNum}.
+                                                            </div>
+                                                            <div>
+                                                                {record.weight}
+                                                                {
+                                                                    record.weightUnit
+                                                                }
+                                                            </div>
+                                                            <div>
+                                                                {record.count}
+                                                                {
+                                                                    record.countUnit
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            css={checkBoxStyle}
+                                                        >
+                                                            {record.setDoneFlag ? (
+                                                                <img
+                                                                    src={
+                                                                        circleCheckIcon
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                <img
+                                                                    src={
+                                                                        negativeCircleCheckIcon
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </div>
+                                                        <img src={deleteIcon} />
+                                                    </motion.div>
+                                                </motion.li>
+                                                    </AnimatePresence>
+                                            )
+                                        )}
+
+                                    <img
+                                        src={setAddIcon}
+                                        onClick={(e) =>
+                                            recordSetAppendHandler(
+                                                e,
+                                                routine.id
+                                            )
+                                        }
+                                    />
+                                </ul>
+                            </HealthCard>
+                        </motion.div>
+                    </AnimatePresence>
+                ))
+            ) : (
+                <motion.div
+                    css={css`
+                        width: 100%;
+                        justify-content: center;
+                        display: flex;
+                    `}
+                    initial={{ opacity: 0, y: 100 }}
+                    animate={{ opacity: 1, y: 0 }}
+                >
                     <HealthCard
                         addStyle={`width:90%;display:flex;flex-direction:column;justify-content:start;`}
-                        key={routine.id + idx}
                     >
                         <div css={healthCardTitleStyle}>
                             <div css={healthCardIconStyle}>
                                 <img src={healthIcon} />
                             </div>
-                            <div css={healthCardTitleBoxStyle}>
-                                <h3 css={titleStyle}>{routine.name}</h3>
-                                <div css={subTitleStyle}>
-                                    <span>#{routine.tagLevel2}</span>
-                                    <button>Done</button>
-                                </div>
+                            <div css={EmptyCardTitleBoxStyle}>
+                                <span css={titleStyle}>
+                                    Routine list is empty.
+                                </span>
                             </div>
                         </div>
-
-                        <ul css={healthCardContentStyle}>
-                            {routine.workSetList &&
-                                routine.workSetList.map((record) => (
-                                    <li key={routine.id + idx + record.setNum}>
-                                        <motion.div
-                                            drag="x"
-                                            dragConstraints={{
-                                                left: 0,
-                                                right: 0,
-                                            }}
-                                            dragElastic={0.5}
-                                            css={workoutSetBoxStyle}
-                                        >
-                                            <img src={uncheckIcon} />
-                                            <div
-                                                css={workoutSetInfoStyle}
-                                                onClick={(e) =>
-                                                    numberPickerHandler(
-                                                        e,
-                                                        routine.id,
-                                                        record.setNum
-                                                    )
-                                                }
-                                            >
-                                                <div>{record.setNum}.</div>
-                                                <div>
-                                                    {record.weight}
-                                                    {record.weightUnit}
-                                                </div>
-                                                <div>
-                                                    {record.count}
-                                                    {record.countUnit}
-                                                </div>
-                                            </div>
-                                            <div css={checkBoxStyle}>
-                                                <img src={circleCheckIcon} />
-                                            </div>
-                                            <img src={deleteIcon} />
-                                        </motion.div>
-                                    </li>
-                                ))}
-
-                            <img
-                                src={setAddIcon}
-                                onClick={(e) =>
-                                    recordSetAppendHandler(e,routine.id)
-                                }
-                            />
-                        </ul>
                     </HealthCard>
-                )):(
-                    <HealthCard
-                    addStyle={`width:90%;display:flex;flex-direction:column;justify-content:start;`}
-                >
-                    <div css={healthCardTitleStyle}>
-                        <div css={healthCardIconStyle}>
-                            <img src={healthIcon} />
-                        </div>
-                        <div css={EmptyCardTitleBoxStyle}>
-                            <span css={titleStyle}>Routine list is empty.</span>
-                        </div>
-                    </div>
-
-                </HealthCard>  
-                )}
+                </motion.div>
+            )}
 
             <Modal
                 open={numberPickerOpen}

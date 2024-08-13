@@ -98,7 +98,7 @@ const RoutineModifyModal = ({ onClose }) => {
     };
 
     //Card 삭제 이벤트
-    const cardDragHandler = (e,xOffset,routineId,idx)=>{
+    const cardDragHandler = (e,xOffset,routineId,idxA,idxB)=>{
 
         if(xOffset > 0){
             //우측 드레그 이벤트 취소 
@@ -109,8 +109,9 @@ const RoutineModifyModal = ({ onClose }) => {
         }
         
         touchVibrateUtil([200,50,200,50,200]);
-        animate(cardListRef.current.filter((item,idx)=>item !== null)[idx],{x:-500},{duration:0.4}).then(()=>{
-            setdeleteRoutineId({id:routineId,index:idx});
+        
+        animate(cardGroupRef.current[idxA].children[idxB],{x:-500},{duration:0.4}).then(()=>{
+            setdeleteRoutineId({id:routineId});
         })
 
     }
@@ -149,7 +150,6 @@ const RoutineModifyModal = ({ onClose }) => {
     const [cardGroupChangeFlag, setCardGroupChangeFlag] = useState(false);
     const cardGroupChangeTimeoutRef = useRef();
     const alertRef = useRef();
-    const cardListRef = useRef([]);
 
     useEffect(() => {
         //루틴 목록이 열렸을때 화살표 회전 애니메이션
@@ -374,15 +374,14 @@ const RoutineModifyModal = ({ onClose }) => {
                                                         targetMuscle.name ===
                                                         routine.tagLevel2
                                                 )
-                                                .map((item, idx) => (
+                                                .map((item, idxB) => (
                                                     <motion.div
-                                                        ref={(el)=>(cardListRef.current[idx] = el)}
                                                         drag="x"
                                                         dragConstraints={{
                                                             left: 0,
                                                             right: 0,
                                                         }}
-                                                        onDragEnd={(e,info)=>cardDragHandler(e,info.offset.x,item.id,idx)}
+                                                        onDragEnd={(e,info)=>cardDragHandler(e,info.offset.x,item.id,idxA,idxB)}
                                                         initial={{
                                                             y: -20,
                                                             opacity: 0,

@@ -109,13 +109,79 @@ export const workoutRecordSlice = createSlice({
                 .workoutList.find((findId) => findId.id === recordRoutineId)
                 .workSetList.push({
                     ...selectedRoutineLastSetInfo,
-                    setNum: selectedRoutineLastSetInfo.setNum+1,
+                    setDoneFlag: false,
+                    setNum: selectedRoutineLastSetInfo.setNum + 1,
                 });
+        },
+        recordDoneChange: (state, action) => {
+            const { routineId, recordSetNum, flag, selectedDate } =
+                action.payload;
+
+            state.workoutInfo
+                .find(
+                    (findItem) => findItem.workoutDate === selectedDate.strDate
+                )
+                .workoutList.find((findId) => findId.id === routineId)
+                .workSetList.find(
+                    (findSet) => findSet.setNum === recordSetNum
+                ).setDoneFlag = flag;
+        },
+        recordDelete: (state, action) => {
+            const { routineId, recordSetNum, selectedDate } = action.payload;
+
+            let deleteRoutineRecord = state.workoutInfo
+                .find(
+                    (findItem) => findItem.workoutDate === selectedDate.strDate
+                )
+                .workoutList.find((findId) => findId.id === routineId)
+                .workSetList.filter(
+                    (findSet) => findSet.setNum !== recordSetNum
+                )
+                .map((item, idx) => ({
+                    ...item,
+                    setNum: idx + 1,
+                }));
+
+            if (deleteRoutineRecord.length > 0) {
+                //record setNum 1 이상이면 수행
+                state.workoutInfo
+                    .find(
+                        (findItem) =>
+                            findItem.workoutDate === selectedDate.strDate
+                    )
+                    .workoutList.find(
+                        (findId) => findId.id === routineId
+                    ).workSetList = deleteRoutineRecord;
+            } else {
+                //record setNum이 비어있으면 루틴 자체를 삭제
+                const workoutList = state.workoutInfo.find((findItem) => findItem.workoutDate === selectedDate.strDate).workoutList.filter((findId) => findId.id !== routineId);
+
+                if(workoutList.length > 0){
+                    //workoutList 수가 1개 이상이면 수행
+                    state.workoutInfo.find((findItem) => findItem.workoutDate === selectedDate.strDate).workoutList = state.workoutInfo
+                    .find(
+                        (findItem) =>
+                            findItem.workoutDate === selectedDate.strDate
+                    )
+                    .workoutList.filter((findId) => findId.id !== routineId);
+
+                }else{
+                    //workoutList가 비어있으면 그날 루틴 기록 삭제
+                    state.workoutInfo = state.workoutInfo.filter((findItem) => findItem.workoutDate !== selectedDate.strDate);
+                    
+                }
+                
+            }
         },
     },
 });
 
-export const { routineListAppend, routineRecordUpdate, routineRecordAppend } =
-    workoutRecordSlice.actions;
+export const {
+    routineListAppend,
+    routineRecordUpdate,
+    routineRecordAppend,
+    recordDoneChange,
+    recordDelete,
+} = workoutRecordSlice.actions;
 
 export default workoutRecordSlice.reducer;
