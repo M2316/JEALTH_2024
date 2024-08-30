@@ -18,7 +18,8 @@ const Input = ({
     name,
     addStyle,
     inputBlurHandler,
-    onKeyDownHandler
+    onKeyDownHandler,
+    readOnly=false
 }) => {
     const InputIcon = () => {
         switch (inputIcon) {
@@ -42,7 +43,7 @@ const Input = ({
     }
 
     return (
-        <div css={addStyle}>
+        <div css={addStyle} disabled={readOnly}>
             <InputIcon />
             <div css={inputBoxStyle}>
                 <input
@@ -53,8 +54,9 @@ const Input = ({
                     name={name}
                     onBlur={inputBlurHandler}
                     onKeyDown={onKeyDownHandler}
+                    disabled={readOnly}
                 />
-                {inputState && (
+                {(inputState && !readOnly) && (
                     <IoMdCloseCircle
                         onClick={(e) => {
                             e.stopPropagation();

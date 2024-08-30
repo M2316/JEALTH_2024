@@ -1,5 +1,6 @@
 import { css } from "@emotion/react";
 import backgroundImg from "@img/login-back-ground.jpg";
+import kakaoLogin from "@img/kakao-login-btn.png";
 
 export const backgroundCss = css`
     -webkit-user-select: none;
@@ -85,13 +86,63 @@ export const divisionCss = css`
 `;
 
 export const otherJoinGroupCss = css`
-    & a {
-        width: 200px;
-        height: 45px;
+    width: 100%;
+
+
+    &>a{
         text-decoration: none;
-        & img {
-            margin: 3px 0;
-            width: 100%;
+    }
+
+    &>a:nth-of-type(1){
+        color: #191919;
+    }
+
+    &>a:nth-of-type(2){
+        color: #191919;
+    }
+
+    &>a:nth-of-type(3){
+        color: #FFF;
+    }
+
+
+`;
+export const oauthLoginBtnStyle = css`
+
+    margin: 5px 10px;
+    height: 45px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    
+    
+    & div:first-of-type{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        
+
+        & img{
+            width: 30px;
         }
     }
+
+    & div:last-of-type{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        width: calc(100% - 50px);
+        
+        & span{
+            margin-right: 40px;
+        }
+        
+        
+    }
+    
+
 `;

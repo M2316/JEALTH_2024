@@ -1,68 +1,51 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import welcomeLogo from "@img/welcomeLogo.png";
-import kakaoLogin from "@img/kakao-login-btn.png";
-import naverLogin from "@img/naver-login-btn.png";
-import googleLogin from "@img/google-login-btn.png";
+import kakaoSymbol from "@img/kakaoSymbol.png";
+import googleSymbol from "@img/googleSymbol.png";
+import facebookSymbol from "@img/facebookSymbol.png";
 
 import Input from "../../common/components/input/Input";
 import Button from "../../common/components/button/Button";
 import UserJoinForm from "./UserJoinForm";
 import FindingPwPageForm from "./FindingPwPageForm";
-
-import { useUserLoginQuery } from "../../hooks/useUserHook";
 import {
     backgroundCss,
     divisionCss,
     inputGroup,
     loginBox,
+    oauthLoginBtnStyle,
     otherJoinGroupCss,
     welcomeLogoBox,
 } from "./LoginStyle";
-import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 import LoadingPage from "../../common/components/loadingPage/LoadingPage";
-
-const breakpoints = [480, 768, 1200];
-const mq = breakpoints.map((bp, idx) => {
-    if (idx === 0) {
-        //스마트폰 해상도
-        return `@media (max-width: ${bp}px)`;
-    } else if (idx === breakpoints.length - 1) {
-        //테블릿 해상도
-        return `@media (max-width: ${bp}px)`;
-    } else {
-        //테스크톱 해상도
-        return `@media (min-width: ${
-            breakpoints[idx - 1] + 1
-        }px) and @media (max-width: ${bp}px)`;
-    }
-});
+import { useNavigate } from "react-router-dom";
+import { useUserLoginQuery } from "../../hooks/useUserHook";
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 const Login = () => {
-    const [userInfo, setUserInfo] = useState({ userId: "", userPw: "" });
     const navigate = useNavigate();
 
-    const token = localStorage.getItem("userInfo");
-    token && navigate("/");
-
-    //회원가입 페이지 모달 플레그
+    const [userInfo, setUserInfo] = useState({});
     const [joinPageIsOpen, setJoinPageIsOpen] = useState(false);
-    //비밀번호 찾기 페이지 모달 플레그
     const [findingPwPageIsOpen, setFindingPwPageIsOpen] = useState(false);
-
+    
     const { data, isLoading, isError, error, refetch } = useUserLoginQuery({
         email: userInfo.userId,
         password: userInfo.userPw,
     });
 
-    //로그인 요청 이벤트
-    const loginHandler = (e) => {
+    const [emailSendLoading, isEmailSendLoading] = useState(false);
+
+    const loginHandler = (e)=>{
         e.preventDefault();
         if (userInfo["userId"] && userInfo["userPw"]) {
             refetch();
+            setTimeout(()=>{
+                navigate("/");
+            },500)          
         }
-    };
+    }
 
     //회원가입 페이지 활성화
     const joinPageModalHandler = () => {
@@ -72,19 +55,6 @@ const Login = () => {
     const findingPwModalHandler = () => {
         setFindingPwPageIsOpen(true);
     };
-
-    useEffect(() => {
-        if (!!data && data.split("Bearer ")[1]) {
-            localStorage.setItem("userInfo", data.split("Bearer ")[1] || "");
-            navigate("/");
-        }
-    }, [data]);
-
-    useEffect(() => {
-        if (isError) {
-            alert("회원 정보가 일치하지 않습니다.");
-        }
-    }, [isError]);
 
     return (
         <div css={backgroundCss}>
@@ -139,14 +109,36 @@ const Login = () => {
                         <div></div>
                     </div>
                     <div css={otherJoinGroupCss}>
-                        <a href="#">
-                            <img src={kakaoLogin} />
+                        
+                        <a href={`${BACKEND_BASE_URL}/oauth2/authorization/kakao`}>
+                            <div css={oauthLoginBtnStyle} style={{background:"#FEE500"}}>
+                                <div>
+                                    <img src={kakaoSymbol}/>
+                                </div>
+                                <div>
+                                    <span>Kakao 로그인</span>
+                                </div>
+                            </div>
                         </a>
-                        <a href="#">
-                            <img src={naverLogin} />
+                        <a href={`${BACKEND_BASE_URL}/oauth2/authorization/google`}>
+                            <div css={oauthLoginBtnStyle} style={{background:"#ffffff"}}>
+                                <div>
+                                    <img src={googleSymbol}/>
+                                </div>
+                                <div>
+                                    <span>Google 로그인</span>
+                                </div>
+                            </div>
                         </a>
-                        <a href="#">
-                            <img src={googleLogin} />
+                        <a href={`${BACKEND_BASE_URL}/oauth2/authorization/facebook`}>
+                            <div css={oauthLoginBtnStyle} style={{background:"#1877f2"}}>
+                                <div>
+                                    <img src={facebookSymbol}/>
+                                </div>
+                                <div>
+                                    <span>Facebook 로그인</span>
+                                </div>
+                            </div>
                         </a>
                     </div>
                 </form>

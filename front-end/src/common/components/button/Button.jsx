@@ -9,21 +9,24 @@ const defaultBtnStyle = {
   [":hover"]: {
     cursor: "pointer",
   },
+  wordBreak:"keep-all"
 };
 
-const Button = ({ type,onClick, btnTheme, children , addStyle}) => {
+const Button = ({ type,onClick, btnTheme, children , addStyle, readOnly}) => {
   const buttonStyle = () => {
+
+
     switch (btnTheme) {
       case "middle-size":
         return css({
           ...defaultBtnStyle,
           color: "white",
+          width:"30%",
           background: "#5BB2C0",
           height: "42px",
           margin: "5px 0px",
-          fontSize: "21px",
+          fontSize: "15px",
           fontWeight: "800",
-          ...addStyle,
         })
       case "login":
       case "join":
@@ -79,7 +82,7 @@ const Button = ({ type,onClick, btnTheme, children , addStyle}) => {
   };
   return (
     <>
-      <button type={type || "button"} css={buttonStyle} onClick={onClick}>
+      <button type={type || "button"} css={buttonStyle} onClick={onClick} disabled={readOnly}>
         {children}
       </button>
     </>

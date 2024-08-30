@@ -22,7 +22,8 @@ export const navLeftStyle = css`
     width: 100%;
     display: flex;
     align-items: center;
-    img{
+    font-size: 2em;
+    svg{
         padding-left: 20px;
     }
 `;

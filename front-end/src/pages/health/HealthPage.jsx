@@ -34,7 +34,7 @@ import {
     recordDoneChange,
     routineRecordAppend,
     routineRecordUpdate,
-} from "../../redux/reducers/workoutRecordSlice";
+} from "../../redux/reducers/health/workoutRecordSlice";
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import { css } from "@emotion/react";
 
@@ -219,7 +219,7 @@ const HealthPage = () => {
                                                             );
                                                         }}
                                                     >
-                                                        {record.setDoneFlag ? (
+                                                        {!record.setDoneFlag ? (
                                                             <img
                                                                 src={clearIcon}
                                                             />

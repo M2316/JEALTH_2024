@@ -13,7 +13,7 @@ import {
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
-import { RoutineNameChange, RoutineTagChange } from "../../redux/reducers/routineManageSlice";
+import { RoutineNameChange, RoutineTagChange } from "../../redux/reducers/health/routineManageSlice";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { inputBoxStyle, inputGroupStyle } from "../../common/components/input/InputStyle";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";

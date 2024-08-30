@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const BACKEND_BASE_URL = import.meta.env.BACKEND_BASE_URL;
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 // const PROXY = window.location.hostname === 'localhost' ? '' : '/proxy';
 
 const api  = axios.create({
-    baseURL:"",
+    baseURL:"/",
     headers:{
         Accept: 'application/json',
     }
@@ -13,11 +13,11 @@ const api  = axios.create({
 
 
 // 요청 인터셉터 추가하기
-axios.interceptors.request.use(function (config) {
+api.interceptors.request.use(function (config) {
     // 요청이 전달되기 전에 작업 수행
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('access-token');
     if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers.Authorization = `${accessToken}`;
        }
     return config;
   }, function (error) {
@@ -26,7 +26,7 @@ axios.interceptors.request.use(function (config) {
   });
 
 // 응답 인터셉터 추가하기
-axios.interceptors.response.use(function (response) {
+api.interceptors.response.use(function (response) {
     // 2xx 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
     // 응답 데이터가 있는 작업 수행
     console.log(response)

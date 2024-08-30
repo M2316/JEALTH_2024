@@ -19,10 +19,10 @@ import {
     usePresence,
 } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { targetMuscleOpenControl } from "../../redux/reducers/routineManageSlice";
+import { targetMuscleOpenControl } from "../../redux/reducers/health/routineManageSlice";
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import RoutineListItem from "./RoutineListItem";
-import { routineListAppend } from "../../redux/reducers/workoutRecordSlice";
+import { routineListAppend } from "../../redux/reducers/health/workoutRecordSlice";
 import { duration } from "@mui/material";
 
 const RoutineListModal = ({ onClose, isOpen }) => {

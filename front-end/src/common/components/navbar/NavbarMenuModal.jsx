@@ -1,6 +1,11 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { iconBoxStyle, modalBodyStyle } from "./NavbarMenuModalStyle";
+import {
+    bottomBtnBoxStyle,
+    iconBoxStyle,
+    modalBodyStyle,
+    navBottomBtnStyle,
+} from "./NavbarMenuModalStyle";
 import homeIcon from "@img/sports/home-white.png";
 import healthIcon from "@img/sports/health-white.png";
 import runningIcon from "@img/sports/running-white.png";
@@ -9,9 +14,24 @@ import rankingIcon from "@img/sports/ranking-white.png";
 import crossfitIcon from "@img/sports/crossfit-white.png";
 import chartIcon from "@img/sports/chart-white.png";
 import chatIcon from "@img/sports/chat-white.png";
-import { Link } from "react-router-dom";
+import dummyUserIcon from "@img/dummy-user-icon.png";
+import exitIcon from "@img/exit-icon.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogoutQuery } from "../../../hooks/useUserHook";
 
 const NavbarMenuModal = () => {
+    const { data, isLoding, isError, error, refetch, isSuccess } =
+        useLogoutQuery();
+
+    const navigate = useNavigate();
+
+    const logoutRequestHandler = () => {
+        refetch();
+        setTimeout(() => {
+            navigate("/login");
+        }, 0);
+    };
+
     return (
         <div css={modalBodyStyle}>
             <ul>
@@ -78,6 +98,23 @@ const NavbarMenuModal = () => {
                             <img src={chatIcon} />
                         </div>
                     </Link>
+                </li>
+            </ul>
+            <ul css={bottomBtnBoxStyle}>
+                <li>
+                    <button css={navBottomBtnStyle}>
+                        <img src={dummyUserIcon} />
+                        <span>MY PAGE</span>
+                    </button>
+                </li>
+                <li>
+                    <button
+                        css={navBottomBtnStyle}
+                        onClick={logoutRequestHandler}
+                    >
+                        <img src={exitIcon} />
+                        <span>LOGOUT</span>
+                    </button>
                 </li>
             </ul>
         </div>

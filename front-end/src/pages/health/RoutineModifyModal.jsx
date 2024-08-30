@@ -7,6 +7,7 @@ import {
     RoutineModalOkButStyle,
     routineCardContainerStyle,
     routineCardTopTapStyle,
+    cardContainerStyle,
     cardWrapStyle,
     alertDialogStyle,
     alertDialogBoxStyle,
@@ -23,7 +24,7 @@ import {
     deleteRoutine,
     RoutineListAdd,
     targetMuscleOpenControl,
-} from "../../redux/reducers/routineManageSlice";
+} from "../../redux/reducers/health/routineManageSlice";
 
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -375,7 +376,8 @@ const RoutineModifyModal = ({ onClose }) => {
                                                         routine.tagLevel2
                                                 )
                                                 .map((item, idxB) => (
-                                                    <motion.div
+                                                    <div css={cardContainerStyle}>
+                                                        <motion.div
                                                         drag="x"
                                                         dragConstraints={{
                                                             left: 0,
@@ -401,11 +403,13 @@ const RoutineModifyModal = ({ onClose }) => {
                                                                 setCardGroupChangeFlag
                                                             }
                                                         ></RoutineModifyItem>
-                                                        <div css={cardDeleteImgBoxStyle}>
+                                                        <motion.div
+                                                        css={cardDeleteImgBoxStyle}>
                                                             <RiDeleteBinLine></RiDeleteBinLine>
                                                             <span>삭제</span>
-                                                        </div>
+                                                        </motion.div>
                                                     </motion.div>
+                                                    </div>
                                                 ))}
                                     </AnimatePresence>
                                 </div>

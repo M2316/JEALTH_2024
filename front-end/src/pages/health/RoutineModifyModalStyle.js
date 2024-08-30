@@ -127,6 +127,10 @@ export const routineGroupSizeStyle = css`
     font-size: 13px !important;
 `;
 
+export const cardContainerStyle = css`
+    overflow-x: hidden;
+`;
+
 export const cardWrapStyle = css`
     position: relative;
     width: 100%;
@@ -167,6 +171,7 @@ export const cardDeleteImgBoxStyle = css`
     align-items: center;
     border-radius: 15px;
     flex-direction: column;
+
     svg{
         font-size: 30px;
     }
