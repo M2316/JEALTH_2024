@@ -7,6 +7,7 @@ import com.backend.jealth.config.oauth.Oauth2LoginSuccessHandler;
 import com.backend.jealth.repository.user.RefreshRepository;
 import com.backend.jealth.repository.user.UserRepository;
 import com.backend.jealth.service.user.CustomOAuth2UserService;
+import com.backend.jealth.service.user.ReissueService;
 import com.backend.jealth.service.user.UserService;
 import com.backend.jealth.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,6 +45,10 @@ public class SecurityConfig {
 
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
 
+    private final JwtConfig jwtConfig;
+
+    private final ReissueService reissueService;
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -66,7 +70,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Arrays.asList("http://m2316homepc.ddns.net:5173", "http://localhost:5173","http://m2316homepc.ddns.net:7070"));
+                        configuration.setAllowedOrigins(Arrays.asList("http://m2316homepc.ddns.net:5173", "http://localhost:5173","http://m2316homepc.ddns.net:7070","https://jealth.store"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -94,9 +98,9 @@ public class SecurityConfig {
                     ).successHandler(oauth2LoginSuccessHandler)
                 )
 
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil,userRepository), UsernamePasswordAuthenticationFilter.class)
                 //Form Login에 기본적으로 적용되어있는 UsernamePasswordAuthenticationFilter를 제거하고 새로 만든 LoginFilter를 추가
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository, userRepository, jwtConfig, reissueService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(refreshRepository,jwtUtil), LogoutFilter.class)
 
                 .sessionManagement((auth)->auth//세션 설정

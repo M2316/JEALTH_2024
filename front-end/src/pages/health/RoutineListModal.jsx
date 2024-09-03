@@ -19,11 +19,12 @@ import {
     usePresence,
 } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { targetMuscleOpenControl } from "../../redux/reducers/health/routineManageSlice";
+import { TargetMuscleOpenControl } from "../../redux/reducers/health/routineManageSlice";
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import RoutineListItem from "./RoutineListItem";
 import { routineListAppend } from "../../redux/reducers/health/workoutRecordSlice";
 import { duration } from "@mui/material";
+import { useRecordRoutineAppendQuery, useRecordRoutineListQuery } from "../../hooks/useRoutineListHook";
 
 const RoutineListModal = ({ onClose, isOpen }) => {
     // 컴포넌트 기본 state
@@ -38,13 +39,29 @@ const RoutineListModal = ({ onClose, isOpen }) => {
         (state) => state.routineManage.targetMuscle
     );
     const selectedDate = useSelector((state) => state.calendar.strDate);
+    
+
+    //선택된 날짜의 레코드 조회 react-query
+    const [selectedYearMonth,setSelectedYearMonth] = useState();
+    useEffect(()=>{
+        if(!selectedDate)return
+        
+        setSelectedYearMonth(`${selectedDate.split('-')[0]}-${selectedDate.split('-')[1]}`)
+    },[selectedDate])
+    const {data:recordRoutineListData,refetch:recordRoutineListRefetch,isLoading:recordRoutineListIsLoading} = useRecordRoutineListQuery(selectedYearMonth);
+    
+
+    //레코드 루틴 추가 react-query
+    const { refetch:routineAppendRefetch } =
+        useRecordRoutineAppendQuery(selectedRoutineList);
 
     //루틴 종목 클릭시 해당 루틴 목록 열기
     const workoutGroupClickHandler = (e, name) => {
         touchVibrateUtil();
-        dispatch(targetMuscleOpenControl({ name, type: "selector" }));
+        dispatch(TargetMuscleOpenControl({ name, type: "selector" }));
     };
 
+    //routine 선택 이벤트 핸들러
     const cardClickHandler = (item) => {
         //이미 선택되어 있는 routine이면 삭제
         const duplicatedRoutine = selectedRoutineList.find(
@@ -57,19 +74,37 @@ const RoutineListModal = ({ onClose, isOpen }) => {
                 )
             );
         } else {
-            setSelectedRoutineList([...selectedRoutineList, item]);
+            setSelectedRoutineList([
+                ...selectedRoutineList,
+                { 
+                    ...item, 
+                    workoutDate: selectedDate,
+                    scoreList: [
+                        {
+                            setNum: 1,
+                            weight: 0,
+                            weightUnit: "Kg",
+                            count: 0,
+                            countUnit: "회",
+                            setDoneFlag: false,
+                        },
+                    ],
+                },
+            ]);
         }
     };
 
+    //루틴 적용 OK버튼 핸들러
     const okBtnHandler = (e) => {
         if (selectedRoutineList.length > 0) {
             touchVibrateUtil([100, 50, 100, 50, 200]);
-            dispatch(
-                routineListAppend({
-                    workoutDate: selectedDate,
-                    selectedRoutine: selectedRoutineList,
+
+            routineAppendRefetch().then(() => {
+                recordRoutineListRefetch().then(()=>{
+                    dispatch(routineRecordListInit(recordRoutineListData));
                 })
-            );
+
+            });
         } else {
             touchVibrateUtil([50, 50, 50]);
         }
@@ -91,6 +126,7 @@ const RoutineListModal = ({ onClose, isOpen }) => {
                     idx
                 ].parentElement.parentElement.scrollIntoView({
                     behavior: "smooth",
+                    block: 'start'
                 });
                 animate(
                     cardGroupRef.current[idx],

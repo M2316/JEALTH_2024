@@ -4,7 +4,7 @@ const globalDividingLineStyle = import.meta.env.GLOBAL_DIVIDING_LINE_COLOR;
 
 export const footerBtnCss = css`
     position: fixed;
-    bottom: 5px;
+    bottom: 55px;
     right: 5px;
     display: flex;
     align-items: center;
@@ -14,7 +14,7 @@ export const footerBtnCss = css`
 
 export const footerContainerCss = css`
     position: fixed;
-    bottom: 5px;
+    bottom: 55px;
     right: 25px;
     height: 50px;
     min-width: 300px;

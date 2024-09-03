@@ -23,13 +23,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     deleteRoutine,
     RoutineListAdd,
-    targetMuscleOpenControl,
+    RoutineListInit,
+    TargetMuscleOpenControl,
 } from "../../redux/reducers/health/routineManageSlice";
 
 import touchVibrateUtil from "../../utils/touchVibrateUtil";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { css } from "@emotion/react";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { useRoutineDelete } from "../../hooks/useRoutineListHook";
 
 const RoutineModifyModal = ({ onClose }) => {
     //redux state
@@ -46,9 +48,13 @@ const RoutineModifyModal = ({ onClose }) => {
         tagLevel2: "선택",
         tagLevel3: "선택",
     });
+
+
     //테그 level별 리스트 가져오기
     const tagLevel2List = useSelector((state) => state.routineManage.tagLevel2);
     const tagLevel3List = useSelector((state) => state.routineManage.tagLevel3);
+
+
     //검색에 적용할 tagList state
     const [tagLevel2ListState, setTagLevel2ListState] = useState([
         "선택",
@@ -58,6 +64,8 @@ const RoutineModifyModal = ({ onClose }) => {
         "선택",
         ...tagLevel3List,
     ]);
+
+    
     //검색용 tag ON/Off state
     const [searchTagLevel2Flag, setSearchTagLevel2Flag] = useState(false);
     const [searchTagLevel3Flag, setSearchTagLevel3Flag] = useState(false);
@@ -65,10 +73,14 @@ const RoutineModifyModal = ({ onClose }) => {
     //루틴 삭제시킬 루틴 ID를 담아두는 state
     const [deleteRoutineId,setdeleteRoutineId] = useState({});
 
+    //루틴 삭제 react-query
+    const {refetch:routineDeleteRefetch} = useRoutineDelete(deleteRoutineId);
+
+
     //루틴 종목 클릭시 해당 루틴 목록 열기
     const workoutGroupClickHandler = (e, name) => {
         touchVibrateUtil();
-        dispatch(targetMuscleOpenControl({ name, type: "manage" }));
+        dispatch(TargetMuscleOpenControl({ name, type: "manage" }));
     };
 
     //루틴 추가 버튼 클릭시 해당 루틴 목록에 추가
@@ -93,7 +105,7 @@ const RoutineModifyModal = ({ onClose }) => {
         });
         if (tagLevel === "tagLevel2") {
             dispatch(
-                targetMuscleOpenControl({ name: tagName, type: "manage" })
+                TargetMuscleOpenControl({ name: tagName, type: "manage" })
             );
         }
     };
@@ -117,8 +129,13 @@ const RoutineModifyModal = ({ onClose }) => {
 
     }
 
+    
+
     useEffect(()=>{
-        dispatch(deleteRoutine(deleteRoutineId.id));
+        routineDeleteRefetch().then(()=>{
+            dispatch(deleteRoutine(deleteRoutineId.id));
+        })
+        
     },[deleteRoutineId])
 
     //테그 두개중 한개가 열리면 나머지는 닫히도록 상태관리
@@ -138,7 +155,7 @@ const RoutineModifyModal = ({ onClose }) => {
                         "선택" === searchVal.tagLevel2) &&
                     (filterItem.tagLevel3 === searchVal.tagLevel3 ||
                         "선택" === searchVal.tagLevel3)
-            )
+            )   
         );
     }, [searchVal, routineList]);
 
@@ -157,14 +174,16 @@ const RoutineModifyModal = ({ onClose }) => {
         routineManageList.map((item, idx) => {
             if (item.manageModalView) {
                 arrowAnimation(arrowControlRef.current[idx], { rotate: 180 });
-                arrowControlRef.current[idx].parentElement.parentElement
-                    .querySelector("button")
-                    .scrollIntoView({ behavior: "smooth" });
                 animate(
                     cardGroupRef.current[idx],
                     { y: [-20, 0], opacity: [0, 1] },
                     { transition: { duration: 0.3 } }
-                );
+                ).then(()=>{
+                    arrowControlRef.current[idx].parentElement.parentElement
+                    .querySelector("button")
+                    .scrollIntoView({ behavior: "smooth",block: 'start' });
+                });
+                
             } else {
                 arrowAnimation(arrowControlRef.current[idx], { rotate: 0 });
             }
@@ -376,7 +395,7 @@ const RoutineModifyModal = ({ onClose }) => {
                                                         routine.tagLevel2
                                                 )
                                                 .map((item, idxB) => (
-                                                    <div css={cardContainerStyle}>
+                                                    <div css={cardContainerStyle} key={item.id}>
                                                         <motion.div
                                                         drag="x"
                                                         dragConstraints={{

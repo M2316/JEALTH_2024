@@ -16,15 +16,25 @@ import RoutineListModal from "../../../pages/health/RoutineListModal";
 import RoutineModifyModal from "../../../pages/health/RoutineModifyModal";
 import { AnimatePresence, motion } from "framer-motion";
 import touchVibrateUtil from "../../../utils/touchVibrateUtil";
+import { useRoutineListQuery } from "../../../hooks/useRoutineListHook";
+import LoadingPage from "../loadingPage/LoadingPage";
+import { useDispatch } from "react-redux";
+import { RoutineListInit } from "../../../redux/reducers/health/routineManageSlice";
 
-const AppFooter = () => {
-    const [footerViewFlag, setFooterViewFlag] = useState(false);
+const AppFooter = ({footerViewFlag, toggleFooterViewHandler}) => {
+
+    //routine List 가져오는 Request-Query
+    const {data:routineData,isFetching:routineIsFetching,refetch:routineRefetch} = useRoutineListQuery();
+
 
     // 루틴 목록 modal open
     const [routineListModalFlag, setRoutineListModalFlag] = useState(false);
 
     // 루틴 수정 modal open
     const [routineModifyModalFlag, setRoutineModifyModalFlag] = useState(false);
+
+    //redex state 코드
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (
@@ -34,21 +44,40 @@ const AppFooter = () => {
             console.log("error");
         }
     }, []);
+
+
     if (
         routineListModalFlag == undefined ||
         routineModifyModalFlag == undefined
     ) {
         console.log("error");
     }
+
+
+    //routine modify modal open 이벤트 처리
+    const routineModifyModalCloseHandler = () => {
+        routineRefetch();
+        setRoutineModifyModalFlag(false);
+    }
+
+
+    //RoutineManageSlice에 초기 routine list state값 셋팅
+    useEffect(()=>{
+        if(routineData){                
+            dispatch(RoutineListInit(routineData))
+        }
+    },[routineData])
+
     return (
         <div>
+            {routineIsFetching && <LoadingPage></LoadingPage>}
             <div css={footerBtnCss}>
                 <img
                     src={plusIcon}
                     width="50px"
                     onClick={() => {
                         touchVibrateUtil([60, 30, 60]);
-                        setFooterViewFlag(!footerViewFlag);
+                        toggleFooterViewHandler();
                     }}
                 />
             </div>
@@ -114,7 +143,7 @@ const AppFooter = () => {
             )}
             <Modal
                 open={routineModifyModalFlag}
-                onClose={() => setRoutineModifyModalFlag(false)}
+                onClose={routineModifyModalCloseHandler}
             >
                 <Box sx={ModalStyle}>
                     <motion.div
@@ -122,7 +151,7 @@ const AppFooter = () => {
                         animate={{ y: 0, opacity: 1 }}
                     >
                         <RoutineModifyModal
-                            onClose={() => setRoutineModifyModalFlag(false)}
+                            onClose={routineModifyModalCloseHandler}
                             isOpen={routineModifyModalFlag}
                         />
                     </motion.div>

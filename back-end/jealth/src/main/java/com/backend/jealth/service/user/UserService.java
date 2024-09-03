@@ -105,7 +105,7 @@ public class UserService {
         }
 
         // DB에 저장된 인증코드 가져오기
-        EmailAuthCodeEntity authCodeEntity = emailAuthCodeRepository.findFirstByEmailOrderByCreatedAtDesc(email);
+        EmailAuthCodeEntity authCodeEntity = emailAuthCodeRepository.findFirstByEmailOrderByCreatedDateDesc(email);
 
 
         // 인증코드가 일치하는지 확인
@@ -143,7 +143,7 @@ public class UserService {
         }
 
         // DB에 저장된 인증코드 가져오기
-        EmailAuthCodeEntity authCodeEntity = emailAuthCodeRepository.findFirstByEmailOrderByCreatedAtDesc(email);
+        EmailAuthCodeEntity authCodeEntity = emailAuthCodeRepository.findFirstByEmailOrderByCreatedDateDesc(email);
 
         // 인증코드가 일치하는지 확인
         if(!authCode.equals(authCodeEntity.getAuthCode())){

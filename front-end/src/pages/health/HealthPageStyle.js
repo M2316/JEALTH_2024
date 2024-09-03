@@ -169,15 +169,26 @@ export const subTitleStyle = css`
     }
 
     & button{
-        background-color: #282828;
-        outline: none;
-        border: none;
         border-radius: 10px;
-        color: #C6DEE2;
-        font-size: 1.3em;
         font-weight: 900;
         padding: 0px 10px;
+        height: 30px;
     }
+`;
+export const routineAllDoenBtnStyle = css`
+        background-color: #b6b6b6;
+        color: #fff;
+        outline: none;
+        border: none;
+        font-size: 1em;
+`;
+export const routineAllUnfinishedBtnStyle = css`
+        background-color: #5cb4ba;
+        color: #fff;
+        outline: none;
+        border: none;
+        font-size: 1.3em;
+        
 `;
 
 export const EmptyCardTitleBoxStyle = css`
@@ -208,7 +219,6 @@ export const modalContentStyle = css`
 
 export const numberPickerStyle = css`
     outline: none;
-    position: absolute;
     top: calc(50vh - 20px);
     left : calc(50vw - 150px);
     background-color: #8f8f8f;

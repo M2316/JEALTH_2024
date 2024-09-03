@@ -12,88 +12,19 @@ const initialState = {
     tagLevel1: ["상체", "하체", "코어"],
     tagLevel2: ["가슴", "어깨", "팔", "등", "복근", "하체"],
     tagLevel3: ["프리웨이트", "머신웨이트", "맨몸웨이트"],
-    routineList: [
-        {
-            id:uuidv4(),
-            name: "벤치프레스",
-            imgCode: "",
-            tagLevel1: "상체",
-            tagLevel2: "가슴",
-            tagLevel3: "프리웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "덤벨 벤치프레스",
-            imgCode: "",
-            tagLevel1: "상체",
-            tagLevel2: "가슴",
-            tagLevel3: "프리웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "체스트 프레스",
-            imgCode: "",
-            tagLevel1: "상체",
-            tagLevel2: "가슴",
-            tagLevel3: "머신웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "스쿼트",
-            imgCode: "",
-            tagLevel1: "하체",
-            tagLevel2: "하체",
-            tagLevel3: "프리웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "레그익스텐션",
-            imgCode: "",
-            tagLevel1: "하체",
-            tagLevel2: "하체",
-            tagLevel3: "머신웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "레그컬",
-            imgCode: "",
-            tagLevel1: "하체",
-            tagLevel2: "하체",
-            tagLevel3: "머신웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "행잉 레그 레이즈",
-            imgCode: "",
-            tagLevel1: "코어",
-            tagLevel2: "복근",
-            tagLevel3: "프리웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "케이블 크런치",
-            imgCode: "",
-            tagLevel1: "코어",
-            tagLevel2: "복근",
-            tagLevel3: "머신웨이트",
-        },
-        {
-            id:uuidv4(),
-            name: "크런치",
-            imgCode: "",
-            tagLevel1: "코어",
-            tagLevel2: "복근",
-            tagLevel3: "맨몸웨이트",
-        },
-    ],
+    routineList: [],
 };
 
 export const routineManageSlice = createSlice({
     name: "routineManage",
     initialState,
     reducers: {
+        //루틴 종목 초기화
+        RoutineListInit : (state,action)=>{
+            state.routineList = action.payload;
+        },
         //루틴 종목 리스트 열기
-        targetMuscleOpenControl: (state, action) => { 
+        TargetMuscleOpenControl: (state, action) => { 
             switch(action.payload.type){
                 case "manage":
                     state.targetMuscle.map((item)=>{
@@ -187,6 +118,6 @@ export const routineManageSlice = createSlice({
     },
 });
 
-export const { targetMuscleOpenControl, RoutineListAdd, RoutineNameChange, RoutineTagChange, deleteRoutine } = routineManageSlice.actions;
+export const { RoutineListInit, TargetMuscleOpenControl, RoutineListAdd, RoutineNameChange, RoutineTagChange, deleteRoutine } = routineManageSlice.actions;
 
 export default routineManageSlice.reducer;

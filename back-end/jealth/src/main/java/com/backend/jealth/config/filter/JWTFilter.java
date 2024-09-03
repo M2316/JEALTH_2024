@@ -2,6 +2,7 @@ package com.backend.jealth.config.filter;
 
 import com.backend.jealth.DTO.user.CustomUserDetails;
 import com.backend.jealth.domain.user.UserEntity;
+import com.backend.jealth.repository.user.UserRepository;
 import com.backend.jealth.util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -22,14 +23,18 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
+    private final UserRepository userRepository;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("access-token");
 
         // 토큰이 없다면 다음 필터로 넘김
         if (accessToken == null) {
             // 다음 필터로 넘김
+
+
             filterChain.doFilter(request, response);
             return;
         }
@@ -62,13 +67,12 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        // username, role 값을 획득
+        // userId, role 값을 획득
         String userKey = jwtUtil.getUserKey(accessToken);
-        String role = jwtUtil.getRole(accessToken);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserKey(userKey);
-        userEntity.setRole(role);
+
+
+        UserEntity userEntity = userRepository.findByUserKey(userKey);
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());

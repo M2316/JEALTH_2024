@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 const backgroundBaseColor = import.meta.env.BACKGRUOND_BASE_COLOR;
 
 export const homePageBodyStyle = css`
+    overflow-y: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,5 +11,4 @@ export const homePageBodyStyle = css`
     height: 100%;
     padding-top: 70px;
     background-color: ${backgroundBaseColor};
-    overflow-y: scroll;
 `;

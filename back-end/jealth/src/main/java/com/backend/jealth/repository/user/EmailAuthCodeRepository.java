@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 public interface EmailAuthCodeRepository extends JpaRepository<EmailAuthCodeEntity, Long> {
 
-    EmailAuthCodeEntity findFirstByEmailOrderByCreatedAtDesc(String email);
+    EmailAuthCodeEntity findFirstByEmailOrderByCreatedDateDesc(String email);
 
 }

@@ -13,6 +13,8 @@ public class CustomUserDetails implements UserDetails {
 
     private final UserEntity userEntity;
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
@@ -24,6 +26,9 @@ public class CustomUserDetails implements UserDetails {
             }
         });
         return collection;
+    }
+    public long getUserId(){
+        return userEntity.getId();
     }
 
     @Override

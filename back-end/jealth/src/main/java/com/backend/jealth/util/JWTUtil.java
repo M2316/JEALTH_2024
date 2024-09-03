@@ -2,6 +2,7 @@ package com.backend.jealth.util;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,9 @@ public class JWTUtil {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
+    public long getUserId(String token){
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", Long.class);
+    }
     public String getEmail(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
@@ -45,16 +49,27 @@ public class JWTUtil {
 
     }
 
-    public String createJwt(String category, String email, String role, Long expiredMs) {
+    public String createJwt(String category, String userKey, String role, Long expiredMs) {
 
         return Jwts.builder()
                 .claim("category", category)
-                .claim("email", email)
+                .claim("userKey", userKey)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+    }
+
+
+    public Cookie createCookie(String key, String value){
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24*60*60);
+        //https 적용시 secure true로 변경
+//        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        return cookie;
     }
 
 

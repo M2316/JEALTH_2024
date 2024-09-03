@@ -26,7 +26,7 @@ public class EmailAuthCodeEntity {
     @Column(columnDefinition = "boolean default false")
     private boolean isVerified;
     @CreationTimestamp
-    private String createdAt;
+    private String createdDate;
     @UpdateTimestamp
-    private String updatedAt;
+    private String updatedDate;
 }

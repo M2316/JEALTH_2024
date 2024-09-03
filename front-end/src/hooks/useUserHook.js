@@ -6,8 +6,8 @@ import api from "../utils/api";
 const fetchUserReissue = async() =>{
     return await api.post("/api/v1/reissue",{},{
     }).then(res=>{
-        console.log(res.headers['access-token'])
         localStorage.setItem('access-token',res.headers['access-token'])
+        return res;
     })
 }
 

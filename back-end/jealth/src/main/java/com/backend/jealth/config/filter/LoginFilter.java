@@ -1,24 +1,24 @@
 package com.backend.jealth.config.filter;
 
 import com.backend.jealth.DTO.user.CustomUserDetails;
+import com.backend.jealth.config.JwtConfig;
 import com.backend.jealth.domain.user.RefreshEntity;
-import com.backend.jealth.domain.user.UserEntity;
 import com.backend.jealth.repository.user.RefreshRepository;
 import com.backend.jealth.repository.user.UserRepository;
+import com.backend.jealth.service.user.ReissueService;
 import com.backend.jealth.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -30,6 +30,8 @@ import java.util.Iterator;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
+
+
     private final AuthenticationManager authenticationManager;
 
     private final JWTUtil jwtUtil;
@@ -38,12 +40,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final UserRepository userRepository;
 
+    private final JwtConfig jwtConfig;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository, UserRepository userRepository) {
+    private final ReissueService reissueService;
+
+
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository, UserRepository userRepository, JwtConfig jwtConfig, ReissueService reissueService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
         this.userRepository = userRepository;
+        this.jwtConfig = jwtConfig;
+        this.reissueService = reissueService;
         setFilterProcessesUrl("/api/v1/login");
     }
     @Override
@@ -79,45 +87,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        // 600000L = 10분
-        String accessToken = jwtUtil.createJwt("access",userKey, role, 60*10*1000L);
-        String refreshToken = jwtUtil.createJwt("refresh",userKey, role, 60*10*1000L);
+
+        String accessToken = jwtUtil.createJwt("access",userKey, role, jwtConfig.getAccessExpiration());
+        String refreshToken = jwtUtil.createJwt("refresh",userKey, role, jwtConfig.getRefreshExpiration());
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        refreshRepository.deleteByRefreshToken(refreshToken);
-        addRefreshEntity(userKey, refreshToken, 60*10*1000L);
+        reissueService.saveRefreshToken(userKey,refreshToken, jwtConfig.getRefreshExpiration());
 
         //헤더에 토큰을 담아서 클라이언트에게 전달
         response.setHeader("access-token", accessToken);
-        response.addCookie(createCookie("refresh-token", refreshToken));
+        response.addCookie(jwtUtil.createCookie("refresh-token", refreshToken));
         response.setStatus(HttpStatus.OK.value());
     }
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setStatus(401);
-    }
-
-    private void addRefreshEntity(String userKey, String refreshToken, long expiredMs){
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUserKey(userKey);
-        refreshEntity.setRefreshToken(refreshToken);
-        refreshEntity.setExpiration(date.toString());
-
-        refreshRepository.save(refreshEntity);
-
-    }
-
-
-    private Cookie createCookie(String key, String value){
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //https 적용시 secure true로 변경
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        return cookie;
     }
 
 }

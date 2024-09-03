@@ -3,6 +3,7 @@ import {
     AfterMonthDateStyle,
     BeforeMonthDateStyle,
     calendarContentStyle,
+    doneRecordedDayStyle,
     recordedDayStyle,
     todayStyle,
 } from "./CalendarDateStyle";
@@ -13,8 +14,6 @@ import { useSelector } from "react-redux";
 import touchVibrateUtil from "../../../utils/touchVibrateUtil";
 import { useAnimate } from "framer-motion";
 
-
-
 const CalendarDate = ({
     type,
     selectDate,
@@ -24,9 +23,7 @@ const CalendarDate = ({
     monthAnimateControls,
 }) => {
     //redux to State AND dispatch
-    const recordList = useSelector(
-        (state) => state.workoutRecord.workoutInfo
-    ).map((item) => item.workoutDate);
+    const recordList = useSelector((state) => state.workoutRecord.workoutInfo);
 
     //선택 일 변경
     const selectDateChangeHandler = (e) => {
@@ -96,11 +93,18 @@ const CalendarDate = ({
 
     //애니메이션 관련 코드 start ================================================================================
     const [scope, animate] = useAnimate();
-    
-    useEffect(()=>{
-        const checkImg = document.querySelector(`[data-month="${selectDate.month}"][data-date="${selectDate.date}"] img`);
-        checkImg && animate(checkImg, { y: [-5, 0] }, { duration: 0.3, type: "spring",stiffness:400 });
-    },[selectDate])
+
+    useEffect(() => {
+        const checkImg = document.querySelector(
+            `[data-month="${selectDate.month}"][data-date="${selectDate.date}"] img`
+        );
+        checkImg &&
+            animate(
+                checkImg,
+                { y: [-5, 0] },
+                { duration: 0.3, type: "spring", stiffness: 400 }
+            );
+    }, [selectDate]);
 
     //애니메이션 관련 코드 end ================================================================================
 
@@ -120,9 +124,11 @@ const CalendarDate = ({
                                             data-year={
                                                 renderCalendarValue.nowYear
                                             }
-                                            data-month={
-                                                dayjs(`${renderCalendarValue.nowYear}-${renderCalendarValue.nowMonth}-${item.date}`).subtract(1,'month').format("MM")
-                                            }
+                                            data-month={dayjs(
+                                                `${renderCalendarValue.nowYear}-${renderCalendarValue.nowMonth}-${item.date}`
+                                            )
+                                                .subtract(1, "month")
+                                                .format("MM")}
                                             data-date={item.date}
                                             data-day={item.day}
                                         >
@@ -138,9 +144,11 @@ const CalendarDate = ({
                                             data-year={
                                                 renderCalendarValue.nowYear
                                             }
-                                            data-month={
-                                                dayjs(`${item.year}-${item.month}-${item.date}`).add(1,'month').format("MM")
-                                            }
+                                            data-month={dayjs(
+                                                `${item.year}-${item.month}-${item.date}`
+                                            )
+                                                .add(1, "month")
+                                                .format("MM")}
                                             data-date={item.date}
                                             data-day={item.day}
                                         >
@@ -161,11 +169,41 @@ const CalendarDate = ({
                                                             "YYYY"
                                                         ) &&
                                                     todayStyle,
-                                                recordList.find(
-                                                    (findItem) =>
-                                                        findItem ===
-                                                        `${renderCalendarValue.nowYear}-${renderCalendarValue.nowMonth}-${item.date}`
-                                                ) && recordedDayStyle, // 저장된 데이터 있으면 표시
+
+                                                () => {
+
+                                                    //해당 날짜에 record가 있는지 확인
+                                                    const nowDayRecord =
+                                                        recordList.filter(
+                                                            (filterItem) =>
+                                                                filterItem.workoutDate ===
+                                                                `${renderCalendarValue.nowYear}-${renderCalendarValue.nowMonth}-${item.date}`
+                                                        );
+                                                    // 입력한 루틴이 없으면 표시 x
+                                                    if (nowDayRecord.length === 0) 
+                                                        return;
+
+                                                    // 입력한 루틴 중 setDoneFlag가 false 인게 있으면 찾음
+                                                    const scoreBeforeDone =
+                                                        nowDayRecord.find(
+                                                            (item) => {
+                                                                return item.scoreList.find(
+                                                                    (
+                                                                        findItem
+                                                                    ) =>
+                                                                        !findItem.setDoneFlag
+                                                                )
+                                                                    ? item
+                                                                    : null;
+                                                            }
+                                                        );
+
+                                                    if (scoreBeforeDone) {
+                                                        return recordedDayStyle;
+                                                    } else {
+                                                        return doneRecordedDayStyle;
+                                                    }
+                                                },
                                             ]}
                                             data-year={
                                                 renderCalendarValue.nowYear

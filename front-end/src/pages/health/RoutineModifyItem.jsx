@@ -18,6 +18,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { inputBoxStyle, inputGroupStyle } from "../../common/components/input/InputStyle";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
+import { useRoutineAddQuery, useRoutinePatch } from "../../hooks/useRoutineListHook";
 
 
 const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
@@ -34,18 +35,35 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
 
     const routineNameRef = useRef();
 
+    //useEffect 제어용 useRef();
+    const queryFlag = useRef(false);
+    //루틴 추가 react-query
+    // const {refetch:routineAddRefetch} = useRoutineAddQuery({...data,name:routineName});
+    // //루틴 수정 react-query
+    const {refetch:routinePatchRefetch} = useRoutinePatch({
+        id:"",
+        name:"",
+        imgCode:"",
+        tagLevel1:"",
+        tagLevel2:"",
+        tagLevel3:"",
+        ...data
+    });
+    
+
+    //테그 클릭시 이벤트 핸들러
     const tagOnClickHandler = (selectTag, idx, selectTagLevel) => {
-        touchVibrateUtil(); //진동 실행
+        touchVibrateUtil(); //진동 실행 
         dispatch(RoutineTagChange({
             routine:data,
             type:selectTagLevel,
-            tag:selectTag
-            
+            tag:selectTag            
         }));
         if(selectTagLevel === 'level2'){
             setCardGroupChangeFlag(true);
-        }
-        
+        }         
+        //query 제어 useRef
+        queryFlag.current = true;
     };
     //루틴 명 변경 이벤트
     const routineStateChangeHandler = (e) => {
@@ -83,7 +101,17 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                     setAlertFlag(false);
                 });
         }, 1000);
+        //query 제어 useRef
+        queryFlag.current = true;
+        
     }, [routineName]);
+
+    useEffect(()=>{
+        if(!!queryFlag.current){
+            queryFlag.current = false;
+            routinePatchRefetch();
+        }
+    },[data])
 
     //애니메이션 관련 코드 start================================================================================
     const [exitAnimationFlag, setExitAnimationFlag] = useState(true);
@@ -123,6 +151,11 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                                     }}
                                     ref={routineNameRef}
                                     css={css` font-size:12px !important;`}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            e.target.blur();
+                                        }
+                                    }}
                                 />
                                 {routineName && (
                                     <IoMdCloseCircle
@@ -136,7 +169,8 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                         </div>
                     </div>
                 </div>
-                <div css={RoutineContentTagBoxStyle}>
+                { routineName && (
+                    <div css={RoutineContentTagBoxStyle}>
                     {tagLevel1 && (
                         <ul css={RoutineTagStyle}>
                             {tagLevel1.map((item, idx) => (
@@ -206,6 +240,8 @@ const RoutineModifyItem = ({ id, setCardGroupChangeFlag}) => {
                         </ul>
                     )}
                 </div>
+                )}
+                
                 {alertFlag && (
                     <AnimatePresence>
                         <motion.div
