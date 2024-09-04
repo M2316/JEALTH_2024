@@ -10,7 +10,7 @@ export default defineConfig(({mode})=>{
   const isProduction = mode === 'production';
 
 
-  const PROXY = isProduction ? '' :'/proxy'
+  const PROXY = isProduction ? '/proxy' :''
 
 
 
