@@ -7,10 +7,8 @@ export default defineConfig(({mode})=>{
   // 현재 모드를 출력하여 확인
   console.log(`Current mode: ${mode}`)
 
-  const isProduction = mode === 'production';
-
-
-  const PROXY = isProduction ? '/proxy' :''
+  const PROXY = mode === 'production' ? '/proxy' : ':7070';
+  console.log(`PROXY type : ${PROXY}`)
 
 
 
@@ -24,11 +22,11 @@ export default defineConfig(({mode})=>{
     server: {
       proxy: {
         "/api": {
-          // target: "http://m2316homepc.ddns.net:7070/api",
-          // target: isProduction 
-          // ? "http://api.jealth.store/api" // 배포 환경 API 엔드포인트
+          target: `http://m2316homepc.ddns.net${PROXY}/api`,
+          // target: mode === 'production'
+          // ? `http://m2316homepc.ddns.net/api` // 배포 환경 API 엔드포인트
           // : "http://m2316homepc.ddns.net:7070/api", // 로컬 개발 환경 API 엔드포인트,  
-          target:`http://m2316homepc.ddns.net${PROXY}/api`,
+          // target:`http://m2316homepc.ddns.net${PROXY}/api`,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
