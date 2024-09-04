@@ -3,7 +3,7 @@
   publish = "dist"
   
 [[redirects]]
-  from = "/proxy/*"
+  from = "/*"
   to = "http://m2316homepc.ddns.net/:splat"
   status = 200
   force = true
