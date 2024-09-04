@@ -25,6 +25,7 @@ export const useUserReissue = () =>{
 
 //로그인 API 요청
 const fetchUserLogin = async(email,password) => {
+    console.log("{POST}/api/v1/login request API ")
     return await api.post("/api/v1/login", {
             email: email,
             password: password,
