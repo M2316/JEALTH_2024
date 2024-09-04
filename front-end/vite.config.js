@@ -10,6 +10,9 @@ export default defineConfig(({mode})=>{
   const isProduction = mode === 'production';
 
 
+  const PROXY = isProduction ? '' :'/proxy'
+
+
 
   return {
     plugins: [react({
@@ -25,7 +28,7 @@ export default defineConfig(({mode})=>{
           // target: isProduction 
           // ? "http://api.jealth.store/api" // 배포 환경 API 엔드포인트
           // : "http://m2316homepc.ddns.net:7070/api", // 로컬 개발 환경 API 엔드포인트,  
-          target:"http://m2316homepc.ddns.net/api",
+          target:`http://m2316homepc.ddns.net${PROXY}/api`,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
