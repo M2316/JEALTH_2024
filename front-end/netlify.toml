@@ -4,6 +4,6 @@
   
 [[redirects]]
   from = "/proxy/*"
-  to = "http://m2316homepc.ddns.net/api/:splat"
+  to = "http://m2316homepc.ddns.net/:splat"
   status = 200
   force = true
