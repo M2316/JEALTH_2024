@@ -8,7 +8,9 @@ export default defineConfig(({mode})=>{
   console.log(`Current mode: ${mode}`)
 
   const PROXY = mode === 'production' ? '/proxy' : ':7070';
-  console.log(`PROXY type : ${PROXY}`)
+  console.log(`PROXY type : ${PROXY}`);
+  console.log(`API SERVER : http://m2316homepc.ddns.net${PROXY}/api`);
+
 
 
 
