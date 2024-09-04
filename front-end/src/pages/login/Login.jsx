@@ -21,7 +21,7 @@ import {
 import LoadingPage from "../../common/components/loadingPage/LoadingPage";
 import { useNavigate } from "react-router-dom";
 import { useUserLoginQuery } from "../../hooks/useUserHook";
-const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+const OAUTH_URL = import.meta.env.VITE_OAUTH_URL;
 
 const Login = () => {
     const navigate = useNavigate();
@@ -110,7 +110,7 @@ const Login = () => {
                     </div>
                     <div css={otherJoinGroupCss}>
                         
-                        <a href={`${BACKEND_BASE_URL}/oauth2/authorization/kakao`}>
+                        <a href={`${OAUTH_URL}/oauth/oauth2/authorization/kakao`}>
                             <div css={oauthLoginBtnStyle} style={{background:"#FEE500"}}>
                                 <div>
                                     <img src={kakaoSymbol}/>
@@ -120,7 +120,7 @@ const Login = () => {
                                 </div>
                             </div>
                         </a>
-                        <a href={`${BACKEND_BASE_URL}/oauth2/authorization/google`}>
+                        <a href={`${OAUTH_URL}/oauth/oauth2/authorization/google`}>
                             <div css={oauthLoginBtnStyle} style={{background:"#ffffff"}}>
                                 <div>
                                     <img src={googleSymbol}/>
@@ -130,7 +130,7 @@ const Login = () => {
                                 </div>
                             </div>
                         </a>
-                        <a href={`${BACKEND_BASE_URL}/oauth2/authorization/facebook`}>
+                        <a href={`${OAUTH_URL}/oauth/oauth2/authorization/facebook`}>
                             <div css={oauthLoginBtnStyle} style={{background:"#1877f2"}}>
                                 <div>
                                     <img src={facebookSymbol}/>

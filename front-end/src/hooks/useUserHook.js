@@ -8,6 +8,8 @@ const fetchUserReissue = async() =>{
     }).then(res=>{
         localStorage.setItem('access-token',res.headers['access-token'])
         return res;
+    }).catch((error)=>{
+        console.log(error)
     })
 }
 

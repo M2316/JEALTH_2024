@@ -188,7 +188,9 @@ public class RecordService {
 
     public void updateDone(RoutineRequest routineRequest) {
 
-        scoreRepository.updateDoneFlag(routineRequest.getId(),routineRequest.getDoneFlag());
+        List<HealthRoutineSetScoreEntity> scoreEntityList = scoreRepository.findAllByHealthRoutineRecordIdOrderBySetNumAsc(Long.parseLong(routineRequest.getId()));
+        scoreEntityList.stream().forEach(scoreEntity -> scoreEntity.setSetDoneFlag(routineRequest.getDoneFlag()));
+        scoreRepository.saveAll(scoreEntityList);
 
     }
 }

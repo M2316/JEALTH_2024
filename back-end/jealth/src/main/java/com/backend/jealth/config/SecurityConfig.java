@@ -84,7 +84,7 @@ public class SecurityConfig {
                 .formLogin((auth)->auth.disable())//formLogin 설정 비활성화
                 .httpBasic((auth)->auth.disable())//httpBasic 설정 비활성화
                 .authorizeHttpRequests((auth)->auth //요청에 대한 권한 설정
-                        .requestMatchers("/login","/","/api/v1/signup").permitAll()
+                        .requestMatchers("/api/v1/login","/","/api/v1/signup").permitAll()
                         .requestMatchers("/api/v1/reissue").permitAll()
                         .requestMatchers("/api/v1/emailAuthCodeSend").permitAll()
                         .requestMatchers("/api/v1/autoCodeCheck").permitAll()

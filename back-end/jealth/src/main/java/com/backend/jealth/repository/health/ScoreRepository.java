@@ -18,7 +18,4 @@ public interface ScoreRepository extends JpaRepository<HealthRoutineSetScoreEnti
     @Query("SELECT e FROM HealthRoutineSetScoreEntity e WHERE e.healthRoutineRecordId = :recordId AND e.setNum = (SELECT MAX(e2.setNum) FROM HealthRoutineSetScoreEntity e2 WHERE e2.healthRoutineRecordId = :recordId)")
     HealthRoutineSetScoreEntity findByMaxSetNum(@Param("recordId") Long recordId);
 
-
-    @Query(nativeQuery = true, value = "UPDATE health_routine_set_score SET set_done_flag = :doneFlag WHERE health_routine_record_id = CAST(:recordId AS INTEGER)")
-    void updateDoneFlag(@Param("recordId") String recordId, @Param("doneFlag") boolean doneFlag);
 }
