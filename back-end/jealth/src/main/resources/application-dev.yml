@@ -1,0 +1,56 @@
+yml:
+  type: dev
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        highlight_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        hbm2ddl:
+          auto: update
+        use_sql_comments: true
+    defer-datasource-initialization: true
+  datasource:
+    url: jdbc:postgresql://m2316homepc.ddns.net:7749/jealth_app
+    username: jealth_app
+    password: Jungsoo1921718!@#
+    driver-class-name: org.postgresql.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jealth.app@gmail.com
+    password: nhzw jhmi qdfg vwum
+    properties:
+      mail:
+        smtp:
+            auth: true
+            starttls:
+                enable: true
+            timeout: 5000
+  jwt:
+    issuer: 031pjs@naver.com
+    secret: jelthProject2024ApplicationwithSpringBootEFNRIFOIDOFGNRCw
+    refresh-expiration: 86400000
+    access-expiration: 3600000
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+              BasicExtractor: trace
+              BasicType: trace
+              BasicValue: trace
+              IdentifierValue: trace
+              StringType: trace
+              TimestampType: trace
+              Type: trace
+              Value: trace
+server:
+  port: 8080
+  ssl:
+    enabled: false

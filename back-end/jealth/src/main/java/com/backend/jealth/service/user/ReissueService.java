@@ -50,9 +50,7 @@ public class ReissueService {
                 .build();
 
         try {
-
             refreshRepository.save(refreshEntity);
-            System.out.println("refreshEntity = " + refreshEntity.getId());
         }catch (ObjectOptimisticLockingFailureException e){
             entityManager.clear();
             throw e;

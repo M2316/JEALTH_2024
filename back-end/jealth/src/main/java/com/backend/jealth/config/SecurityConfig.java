@@ -50,19 +50,19 @@ public class SecurityConfig {
     private final ReissueService reissueService;
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf((auth)->auth.disable())//csrf 설정 비활성화
+                .csrf((auth) -> auth.disable())//csrf 설정 비활성화
                 .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
                     @Override
@@ -70,7 +70,12 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Arrays.asList("http://m2316homepc.ddns.net:5173", "http://localhost:5173","http://m2316homepc.ddns.net:7070","https://jealth.store"));
+                        configuration.setAllowedOrigins(
+                                Arrays.asList(
+                                        "http://m2316homepc.ddns.net:5173",
+                                        "https://jealth.store"
+                                )
+                        );
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -81,10 +86,10 @@ public class SecurityConfig {
                         return configuration;
                     }
                 })))
-                .formLogin((auth)->auth.disable())//formLogin 설정 비활성화
-                .httpBasic((auth)->auth.disable())//httpBasic 설정 비활성화
-                .authorizeHttpRequests((auth)->auth //요청에 대한 권한 설정
-                        .requestMatchers("/api/v1/login","/","/api/v1/signup").permitAll()
+                .formLogin((auth) -> auth.disable())//formLogin 설정 비활성화
+                .httpBasic((auth) -> auth.disable())//httpBasic 설정 비활성화
+                .authorizeHttpRequests((auth) -> auth //요청에 대한 권한 설정
+                        .requestMatchers("/login", "/api/v1/login", "/", "/api/v1/signup").permitAll()
                         .requestMatchers("/api/v1/reissue").permitAll()
                         .requestMatchers("/api/v1/emailAuthCodeSend").permitAll()
                         .requestMatchers("/api/v1/autoCodeCheck").permitAll()
@@ -92,18 +97,18 @@ public class SecurityConfig {
                         .requestMatchers("/loginOauth/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .oauth2Login((oauth2)->oauth2
-                        .userInfoEndpoint((userInfo)->userInfo
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfo) -> userInfo
                                 .userService(new CustomOAuth2UserService(userRepository, userService))
-                    ).successHandler(oauth2LoginSuccessHandler)
+                        ).successHandler(oauth2LoginSuccessHandler)
                 )
 
-                .addFilterBefore(new JWTFilter(jwtUtil,userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class)
                 //Form Login에 기본적으로 적용되어있는 UsernamePasswordAuthenticationFilter를 제거하고 새로 만든 LoginFilter를 추가
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository, userRepository, jwtConfig, reissueService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(refreshRepository,jwtUtil), LogoutFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(refreshRepository, jwtUtil), LogoutFilter.class)
 
-                .sessionManagement((auth)->auth//세션 설정
+                .sessionManagement((auth) -> auth//세션 설정
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }

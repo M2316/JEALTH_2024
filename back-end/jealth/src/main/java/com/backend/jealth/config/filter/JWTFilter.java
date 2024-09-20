@@ -7,6 +7,7 @@ import com.backend.jealth.util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
@@ -27,8 +29,27 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+
+        System.out.println("##### JWTFilter #####");
+        System.out.println("##### URL : "+ request.getRequestURL() +" #####");
+        System.out.println("##### IP : "+ request.getRemoteAddr() +" #####");
+        System.out.println("##### JWTFilter #####");
+
         // 헤더에서 access키에 담긴 토큰을 꺼냄
-        String accessToken = request.getHeader("access-token");
+        String accessToken = request.getHeader("authorization");
+
+        // accessToken 인증이 필요 없는 요청 다음 필터로 넘김
+        if(
+                "/api/v1/login".equals(request.getRequestURI()) ||
+                "/api/v1/signup".equals(request.getRequestURI()) ||
+                "/api/v1/refresh".equals(request.getRequestURI()) ||
+                "/api/v1/logout".equals(request.getRequestURI()) ||
+                "/api/v1/reissue".equals(request.getRequestURI())
+        ){
+            // 다음 필터로 넘김
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 토큰이 없다면 다음 필터로 넘김
         if (accessToken == null) {

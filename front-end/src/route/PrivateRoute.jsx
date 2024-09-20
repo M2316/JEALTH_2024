@@ -12,13 +12,13 @@ const PrivateRoute = ({ component }) => {
     const navigate = useNavigate();
 
 
-    const authenticate = localStorage.getItem("access-token");
+    const authenticate = localStorage.getItem("authorization");
     useEffect(() => {
         // const logoutFlag = state;
         if ( !authenticate) {
         //     const tokenDecoded = jwtDecode(authenticate);
         //     if(new Date().getTime() > (tokenDecoded.exp*1000)){ // 토큰 만료시간 체크
-        //         localStorage.removeItem("access-token") // 만료 토큰으로 요청하면 localStorage에서 제거
+        //         localStorage.removeItem("authorization") // 만료 토큰으로 요청하면 localStorage에서 제거
                 navigate("/login");
         //     }else{
         //         setEmail(tokenDecoded.email); // 이메일 셋
@@ -26,8 +26,8 @@ const PrivateRoute = ({ component }) => {
         } 
         // else {
 
-        //     //localStorage에 access-token이 없으면 refresh-token으로 access-token 요청
-        //     localStorage.removeItem("access-token") // 만료 토큰으로 요청하면 localStorage에서 제거
+        //     //localStorage에 authorization이 없으면 refresh-token으로 authorization 요청
+        //     localStorage.removeItem("authorization") // 만료 토큰으로 요청하면 localStorage에서 제거
         //     navigate("/login");
         // }
     }, [state]);

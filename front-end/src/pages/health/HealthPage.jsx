@@ -56,8 +56,13 @@ import LoadingPage from "../../common/components/loadingPage/LoadingPage";
 const HealthPage = () => {
     const [footerViewFlag, setFooterViewFlag] = useState(false);
     const toggleFooterViewHandler = () => {
+        console.log("before footer View!!! flag => "+ footerViewFlag);
         setFooterViewFlag(!footerViewFlag);
+        console.log("after footer View!!! flag => "+ !footerViewFlag);
     };
+    useEffect(()=>{
+        console.log("footerViewFlag : " + footerViewFlag);
+    },[footerViewFlag])
 
     const [routineRecordValue, setRoutineRecordValue] = useState({});
     const [numberPickerOpen, setNumberPickerOpen] = useState(false);
@@ -272,7 +277,8 @@ const HealthPage = () => {
     //애니메이션 관련 코드 end================================================================================
 
     const bodyClickHandler = (e) => {
-        if (!!e.target.src && e.target.src.includes("/plus-icon.png")) return;
+        console.log("event !! => " + e.target.name);
+        if (!!e.target.src && e.target.name === "FooterPlusIcon") return;
         setFooterViewFlag(false);
     };
     return (

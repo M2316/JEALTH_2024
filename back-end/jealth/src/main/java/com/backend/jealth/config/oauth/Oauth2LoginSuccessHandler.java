@@ -81,12 +81,13 @@ public class Oauth2LoginSuccessHandler  extends SimpleUrlAuthenticationSuccessHa
         reissueService.saveRefreshToken(userKey,refreshToken, jwtConfig.getRefreshExpiration());
 
         //헤더에 토큰을 담아서 클라이언트에게 전달
-        response.setHeader("access-token", accessToken);
+        response.setHeader("authorization", accessToken);
+        response.setHeader("Set-Cookie", "JSESSIONID=; HttpOnly; SameSite=none; Secure");
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
-        response.addCookie(jwtUtil.createCookie("refresh-token", refreshToken));
-        response.sendRedirect("http://m2316homepc.ddns.net:5173/oauth2/redirect");
+        response.addCookie(jwtUtil.createCookie("refreshToken", refreshToken));
+        response.sendRedirect("https://jealth.store/oauth2/redirect");
         response.setStatus(HttpStatus.OK.value());
     }
 

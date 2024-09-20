@@ -131,7 +131,6 @@ public class UserService {
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
-        System.out.println("생성된 랜덤 인증코드"+ key);
         return key;
     }
 

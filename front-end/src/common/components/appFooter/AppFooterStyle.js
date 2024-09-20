@@ -4,21 +4,30 @@ const globalDividingLineStyle = import.meta.env.GLOBAL_DIVIDING_LINE_COLOR;
 
 export const footerBtnCss = css`
     position: fixed;
-    bottom: 55px;
+    bottom: 10px;
     right: 5px;
     display: flex;
     align-items: center;
-    height: 50px;
     z-index: 10;
+    & button{
+        background-color: #ffffff00;
+        border: none;
+        padding: 0;
+        display: flex;
+        height: 100%;
+        & img{
+            width: 50px;
+        }
+    }
 `;
 
 export const footerContainerCss = css`
     position: fixed;
-    bottom: 55px;
-    right: 25px;
+    bottom: 10px;
+    right: 30px;
     height: 50px;
     min-width: 300px;
-    width: calc(100% - 25px);
+    width: calc(100% - 35px);
     max-width: 370px;
     border: 3px solid #C6DEE2;
     border-top-left-radius: 50px;

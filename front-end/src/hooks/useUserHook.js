@@ -6,10 +6,10 @@ import api from "../utils/api";
 const fetchUserReissue = async() =>{
     return await api.post("/api/v1/reissue",{},{
     }).then(res=>{
-        localStorage.setItem('access-token',res.headers['access-token'])
+        localStorage.setItem('authorization',res.headers['authorization'])
         return res;
     }).catch((error)=>{
-        console.log(error)
+        console.log("auth login reissue error : "+error)
     })
 }
 
@@ -25,8 +25,6 @@ export const useUserReissue = () =>{
 
 //로그인 API 요청
 const fetchUserLogin = async(email,password) => {
-    console.log("{POST}/api/v1/login request API ");
-    console.log(" base url : "+window.location);
     return await api.post("/api/v1/login", {
             email: email,
             password: password,
@@ -35,7 +33,7 @@ const fetchUserLogin = async(email,password) => {
                 "Content-Type": "application/x-www-form-urlencoded",
               }
         }).then((res)=>{
-            localStorage.setItem("access-token", res.headers["access-token"]);   
+            localStorage.setItem("authorization", res.headers["authorization"]);   
             return res;         
         })
 }
@@ -73,9 +71,10 @@ export const useUserSignupQuery = ({email,password,nickname})=>{
 
 //로그아웃 API 요청
 const fetchUserLogout = ()=>{
+    localStorage.removeItem("authorization");
     return api.post("/api/v1/logout")
     .then(()=>{
-        localStorage.removeItem("access-token")
+        localStorage.removeItem("authorization")
     })
 }
 
@@ -97,6 +96,7 @@ const fetchEmailAuthCodeSend = ({email})=>{
 }
 
 export const useEmailAuthCodeSend = ({email})=>{
+    console.log("email 인증 요청")
     return useQuery({
         enabled:false,
         queryKey:["user-auth-code-send"],

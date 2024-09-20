@@ -95,8 +95,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         reissueService.saveRefreshToken(userKey,refreshToken, jwtConfig.getRefreshExpiration());
 
         //헤더에 토큰을 담아서 클라이언트에게 전달
-        response.setHeader("access-token", accessToken);
-        response.addCookie(jwtUtil.createCookie("refresh-token", refreshToken));
+        response.setHeader("authorization", accessToken);
+        response.setHeader("Set-Cookie", "JSESSIONID=; HttpOnly; SameSite=none; Secure");
+        response.addCookie(jwtUtil.createCookie("refreshToken", refreshToken));
         response.setStatus(HttpStatus.OK.value());
     }
     @Override

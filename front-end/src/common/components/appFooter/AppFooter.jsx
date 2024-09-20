@@ -72,14 +72,20 @@ const AppFooter = ({footerViewFlag, toggleFooterViewHandler}) => {
         <div>
             {routineIsFetching && <LoadingPage></LoadingPage>}
             <div css={footerBtnCss}>
-                <img
-                    src={plusIcon}
-                    width="50px"
+                <button
                     onClick={() => {
-                        touchVibrateUtil([60, 30, 60]);
                         toggleFooterViewHandler();
+                        touchVibrateUtil([60, 30, 60]);
                     }}
-                />
+                >
+                    <img
+                        name="FooterPlusIcon"
+                        src={plusIcon}
+                        
+                    />
+
+                </button>
+                
             </div>
             {footerViewFlag && (
                 <div css={footerContainerCss}>

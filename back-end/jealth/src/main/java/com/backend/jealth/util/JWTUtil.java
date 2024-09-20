@@ -14,6 +14,10 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
+
+    @Value("${yml.type}")
+    private String ymlType;
+
     private final SecretKey secretKey ;
     public JWTUtil(@Value("${spring.jwt.secret}") String secret){
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -63,10 +67,15 @@ public class JWTUtil {
 
 
     public Cookie createCookie(String key, String value){
+        System.out.println("ymlType : "+ymlType);
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
+
         //https 적용시 secure true로 변경
-//        cookie.setSecure(true);
+        if("prod".equals(ymlType)) {
+
+            cookie.setSecure(true);
+        }
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         return cookie;

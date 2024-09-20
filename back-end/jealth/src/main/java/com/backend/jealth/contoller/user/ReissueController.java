@@ -39,8 +39,8 @@ public class ReissueController {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
-            if (cookie.getName().equals("refresh-token")) {
-                //기존 쿠키에서 refresh-token 추출
+            if (cookie.getName().equals("refreshToken")) {
+                //기존 쿠키에서 refreshToken 추출
                 refresh = cookie.getValue();
 
                 cookie.setMaxAge(0);
@@ -93,8 +93,9 @@ public class ReissueController {
 
 
         //response
-        response.setHeader("access-token", accessToken);
-        response.addCookie(jwtUtil.createCookie("refresh-token", refreshToken));
+        response.setHeader("authorization", accessToken);
+        response.setHeader("Set-Cookie", "JSESSIONID=; HttpOnly; SameSite=none; Secure");
+        response.addCookie(jwtUtil.createCookie("refreshToken", refreshToken));
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);

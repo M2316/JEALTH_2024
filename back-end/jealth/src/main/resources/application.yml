@@ -1,3 +1,5 @@
+yml:
+  type: prod
 spring:
   jpa:
     show-sql: true
@@ -23,21 +25,21 @@ spring:
             client-name: google
             client-id: 1050415704565-j4iun4fbi3isvv4lfkdqdk8ur7o660fa.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: http://m2316homepc.ddns.net/oauth/login/oauth2/code/google
+            redirect-uri: https://api.jealth.store/login/oauth2/code/google
             authorization-grant-type: authorization_code
             scope: profile,email
           facebook:
             client-name: facebook
             client-id: 1646494699471400
             client-secret: e67de0cf831f674a288492d3e71e53f5
-            redirect-uri: http://m2316homepc.ddns.net/oauth/login/oauth2/code/facebook
+            redirect-uri: https://api.jealth.store/login/oauth2/code/facebook
             authorization-grant-type: authorization_code
             scope: email,public_profile
           kakao:
             client-id: ae67088eb7f77b4bc903084d846f7474
             client-secret: 1tTJlulgKAh21oJ0qgxdyD6DNoHxr3Ok
             client-authentication-method: client_secret_post
-            redirect-uri: http://m2316homepc.ddns.net/oauth/login/oauth2/code/kakao
+            redirect-uri: https://api.jealth.store/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-name: kakao
             scope: profile_image,profile_nickname,account_email
@@ -82,4 +84,12 @@ logging:
               Type: trace
               Value: trace
 server:
+  servlet:
+    session:
+      cookie:
+        same-site: none
+  ssl:
+    key-store: /home/jealth/jealth_API_server/keystore.p12
+    key-store-type: PKCS12
+    key-store-password: jealth2024sslIncryption0913
   port: 3350
